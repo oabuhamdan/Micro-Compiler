@@ -18,6 +18,7 @@ public class Driver {
 		}
 		catch ( Exception e){
 			System.out.println("You must specify an input file");
+			osama
 			System.exit(0);
 		}
 
