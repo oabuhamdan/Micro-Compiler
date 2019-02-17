@@ -17,7 +17,7 @@ public class Driver {
 			is = new FileInputStream(inputFile);
 		}
 		catch ( Exception e){
-			System.out.println("You must specify an input file");
+			System.out.println("You must specify an input file");	//HI
 			System.exit(0);
 		}
 
