@@ -2,30 +2,45 @@
 // import antlr
 
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.Token;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.util.List;
 
 public class Driver {
 
-	public static void main(String[] args) throws Exception{
-		// read input MICRO code
-		InputStream is=null;
-		try{
-			String inputFile;
-			inputFile = args[0];
-			is = new FileInputStream(inputFile);
-		}
-		catch ( Exception e){
-			System.out.println("You must specify an input file");
-			System.exit(0);
-		}
+    public static void main(String[] args) throws Exception {
+        // read input MICRO code
+        InputStream is = null;
+        try {
+            String inputFile;
+            inputFile = args[0];
+            is = new FileInputStream(inputFile);
+        } catch (Exception e) {
+            System.out.println("You must specify an input file");
+            System.exit(0);
+        }
 
-		ANTLRInputStream input = new ANTLRInputStream(is);
-		MicroLexer lexer = new MicroLexer(input);
+        ANTLRInputStream input = new ANTLRInputStream(is);
+        MicroLexer lexer=new MicroLexer(input);
+        String[]tokenTypes=lexer.getRuleNames();
+        List tokens=lexer.getAllTokens();
+        outputValues(tokenTypes,tokens);
 
-		// add code here to print each token’s type and value
+    }
 
-	}
+    static void outputValues(String[] tokenTypes,List<Token>tokens) throws FileNotFoundException {
+        File outputDir=new File("output");
+        if(!outputDir.exists()){
+            outputDir.mkdir();
+        }
+        File outFile=new File(outputDir+"/result.out");
+        PrintWriter out=new PrintWriter(new BufferedOutputStream(new FileOutputStream(outFile)));
+        for ( Token token: tokens ) {
+            out.print("Token Type : "+tokenTypes[token.getType()-1]+" || ");
+            out.println("Token Value : "+token.getText());
+            out.flush();
+        }
+    }
 
 }
