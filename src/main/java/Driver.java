@@ -23,13 +23,14 @@ public class Driver {
 
         ANTLRInputStream input = new ANTLRInputStream(is);
         MicroLexer lexer=new MicroLexer(input);
-        String[]tokenTypes=lexer.getRuleNames();
-        List tokens=lexer.getAllTokens();
-        outputValues(tokenTypes,tokens);
+
+        outputTokens(lexer);
 
     }
 
-    static void outputValues(String[] tokenTypes,List<Token>tokens) throws FileNotFoundException {
+    static void outputTokens(MicroLexer lexer) throws FileNotFoundException {
+        String[]tokenTypes=lexer.getRuleNames();
+        List <Token>tokens= (List<Token>) lexer.getAllTokens();
         File outputDir=new File("output");
         if(!outputDir.exists()){
             outputDir.mkdir();
