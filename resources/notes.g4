@@ -1,18 +1,9 @@
-// Define a grammar called Micro
-grammar Micro;
-
-authors:'OSAMA ABUAMDAN' 'SAAD JALOWDI';
-
-IDENTIFIER: ('A'..'Z'|'a'..'z')('A'..'Z'|'a'..'z'|'0'..'9')* ;
-WS : (' '|'\t'|'\r'|'\n')+ -> skip ;  // skip spaces, tabs, newlines
-INTLITERAL : '0'|('1'..'9')('0'..'9')* ;
-FLOATLITERAL : ('0'|(('1'..'9')('0'..'9')*)).('0'|(('0'..'9')*)('1'..'9')) ;
-STRINGLITERAL : '"' .*? '"' ;
-COMMENT : '--' .*? '\n';
-
-
-
 //PARSER RULES
+
+OPERATOR : ':=' | '+' | '-' | '*' | '/' | '=' | '!=' | '<' | '>' | '(' | ')' | ';' | ',' | '<=' | '>=' ;
+KEYWORD: 'PROGRAM1' | 'BEGIN' | 'END' | 'FUNCTION' | 'READ' | 'WRITE' | 'IF' | 'ELSE' |'ENDIF' | 'FOR' |'ENDFOR' | 'RETURN' | 'INT' | 'VOID' | 'STRING' | 'FLOAT' ;
+
+
 
 /*	Program	*/
 program	:	'PROGRAM'	id	'BEGIN'   pgm_body    'END' ;
@@ -77,3 +68,4 @@ expr_list : expr expr_list_tail |  ;
 expr_list_tail : ',' expr expr_list_tail |  ;
 addop : '+' | '-' ;
 mulop : '*' | '/' ;
+

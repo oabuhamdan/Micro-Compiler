@@ -1,9 +1,7 @@
 
 // import antlr
 
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.Token;
-
+import org.antlr.v4.runtime.*;
 import java.io.*;
 import java.util.List;
 
@@ -22,24 +20,29 @@ public class Driver {
         }
 
         ANTLRInputStream input = new ANTLRInputStream(is);
-        MicroLexer lexer=new MicroLexer(input);
+        MicroLexer lexer = new MicroLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        MicroParser parser = new MicroParser(tokens);
+
 
         outputTokens(lexer);
 
     }
 
     static void outputTokens(MicroLexer lexer) throws FileNotFoundException {
-        String[]tokenTypes=lexer.getRuleNames();
-        List <Token>tokens= (List<Token>) lexer.getAllTokens();
-        File outputDir=new File("output");
-        if(!outputDir.exists()){
+        List<Token> tokens = (List<Token>) lexer.getAllTokens();
+
+        File outputDir = new File("output");
+        if (!outputDir.exists()) {
             outputDir.mkdir();
         }
-        File outFile=new File(outputDir+"/result.out");
-        PrintWriter out=new PrintWriter(new BufferedOutputStream(new FileOutputStream(outFile)));
-        for ( Token token: tokens ) {
-            out.print("Token Type : "+tokenTypes[token.getType()-1]+" || ");
-            out.println("Token Value : "+token.getText());
+
+        File outFile = new File(outputDir + "/result.out");
+        PrintWriter out = new PrintWriter(new BufferedOutputStream(new FileOutputStream(outFile)));
+        for ( Token token : tokens ) {
+            String tokenType = lexer.getVocabulary().getSymbolicName(token.getType());
+            String tokenValue = token.getText();
+            out.println(tokenType + " :: " + tokenValue);
             out.flush();
         }
     }
