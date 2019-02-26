@@ -9,7 +9,7 @@ WS : (' '|'\t'|'\r'|'\n')+ -> skip ;  // skip spaces, tabs, newlines
 INTLITERAL : '0'|('1'..'9')('0'..'9')* ;
 FLOATLITERAL : ('0'|(('1'..'9')('0'..'9')*)).('0'|(('0'..'9')*)('1'..'9')) ;
 STRINGLITERAL : '"' .*? '"' ;
-COMMENT : '--' .*? '\n';
+COMMENT : '--' .*? '\n'  -> skip ;
 
 OPERATOR : ':=' | '+' | '-' | '*' | '/' | '=' | '!=' | '<' | '>' | '(' | ')' | ';' | ',' | '<=' | '>=' ;
 
@@ -23,12 +23,12 @@ pgm_body    :	decl    func_declarations ;
 decl    :	string_decl	decl	|	var_decl	decl	|	  ;
 
 /*	String	Declaration	*/
-string_decl	:	'STRING'	id	':='	str	;
+string_decl	:	'STRING'	id	':='	str	';';
 str	    :	STRINGLITERAL ;
 
 
 /*	Variable	Declaration	*/
-var_decl    :	var_type	id_list	;
+var_decl    :	var_type	id_list	';';
 var_type	:	'FLOAT'	|	'INT' ;
 any_type	:	var_type	|	'VOID' ;
 id_list	    :	id	id_tail ;
@@ -41,7 +41,7 @@ param_decl_tail	    :	','	param_decl	param_decl_tail	|	  ;
 
 /*	Function	Declarations	*/
 func_declarations		:	func_decl	func_declarations	|	  ;
-func_decl	:	'FUNCTION'	any_type	id	(param_decl_list)	'BEGIN'	func_body	'END' ;
+func_decl	:	'FUNCTION'	any_type	id	'(' param_decl_list ')'	'BEGIN'	func_body	'END' ;
 func_body	:	decl	stmt_list ;
 
 /*	Statement	List	*/
@@ -50,11 +50,11 @@ stmt	    :	basic_stmt		|	if_stmt	|	for_stmt ;
 basic_stmt	:	assign_stmt	|	read_stmt	|	write_stmt	|	return_stmt ;
 
 /*	Basic	Statements	*/
-assign_stmt		:	assign_expr	;
+assign_stmt		:	assign_expr	';' ;
 assign_expr	    :	id	':='	expr ;
-read_stmt	    :	'READ'	'('id_list')';
-write_stmt	    :	'WRITE'	'(' id_list	')';
-return_stmt	    :	'RETURN'	expr;
+read_stmt	    :	'READ'	'('id_list')' ';';
+write_stmt	    :	'WRITE'	'(' id_list	')' ';';
+return_stmt	    :	'RETURN'	expr  ';';
 
 /* if_stmt */
 if_stmt : 'IF' '(' cond ')' decl stmt_list else_part 'ENDIF' ;
@@ -68,13 +68,13 @@ init_expr : assign_expr |  ;
 incr_expr : assign_expr |  ;
 
 /* Expressions */
-expr : expr_prefix term ;
+expr : expr_prefix term  ;
 expr_prefix : expr_prefix term addop |  ;
 term : factor_prefix factor ;
 factor_prefix : factor_prefix factor mulop |  ;
 factor : primary | call_expr ;
 primary : '(' expr ')' | id | INTLITERAL | FLOATLITERAL ;
-call_expr : id '(' expr_list ')' ;
+call_expr : id '(' expr_list ')'  ;
 expr_list : expr expr_list_tail |  ;
 expr_list_tail : ',' expr expr_list_tail |  ;
 addop : '+' | '-' ;

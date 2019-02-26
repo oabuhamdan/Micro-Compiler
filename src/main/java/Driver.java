@@ -2,31 +2,39 @@
 // import antlr
 
 import org.antlr.v4.runtime.*;
+
 import java.io.*;
 import java.util.List;
 
 public class Driver {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args {
         // read input MICRO code
-        InputStream is = null;
+        InputStream is;
+
         try {
+
             String inputFile;
-            inputFile = args[0];
-            is = new FileInputStream(inputFile);
+
+            for (int counter = 1; counter <= 21; counter++) {
+                inputFile = "input/step2/input/test" + counter + ".micro";
+
+                is = new FileInputStream(inputFile);
+
+                ANTLRInputStream input = new ANTLRInputStream(is);
+                MicroLexer lexer = new MicroLexer(input);
+                CommonTokenStream tokens = new CommonTokenStream(lexer);
+                MicroParser parser = new MicroParser(tokens);
+                System.out.println("test number : " + counter);
+                parser.program();
+                System.out.println(parser.getNumberOfSyntaxErrors());
+
+
+            }
         } catch (Exception e) {
             System.out.println("You must specify an input file");
             System.exit(0);
         }
-
-        ANTLRInputStream input = new ANTLRInputStream(is);
-        MicroLexer lexer = new MicroLexer(input);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        MicroParser parser = new MicroParser(tokens);
-
-
-        outputTokens(lexer);
-
     }
 
     static void outputTokens(MicroLexer lexer) throws FileNotFoundException {
@@ -39,7 +47,7 @@ public class Driver {
 
         File outFile = new File(outputDir + "/result.out");
         PrintWriter out = new PrintWriter(new BufferedOutputStream(new FileOutputStream(outFile)));
-        for ( Token token : tokens ) {
+        for (Token token : tokens) {
             String tokenType = lexer.getVocabulary().getSymbolicName(token.getType());
             String tokenValue = token.getText();
             out.println(tokenType + " :: " + tokenValue);
