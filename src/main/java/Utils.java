@@ -28,6 +28,12 @@ public class Utils {
         }
     }
 
+    /**
+     * Get file name out from its path.
+     *
+     * @param path input file path.
+     * @return output file name.
+     */
     public static String getFileName(String path) {
         int lastSeparatorIndex = path.lastIndexOf('/');
         int lastPointIndex = path.lastIndexOf('.');

@@ -1,6 +1,5 @@
 
 import org.antlr.v4.runtime.*;
-
 import java.io.*;
 import javax.swing.JOptionPane;
 
@@ -36,9 +35,15 @@ public class Driver {
         Utils.outputMessageToFile(validityMessage, outputFileName(inputFile));//second param is the input file path , to get output file name with the same name
     }
 
-    static String outputFileName(String initialName) {
+    /**
+     * Shows window to enter output file name, or just press enter to use the default name.
+     *
+     * @param inputFilePath input file path, to use its name with the output file.
+     * @return output file name.
+     */
+    static String outputFileName(String inputFilePath) {
         String outputFileName;
-        outputFileName = JOptionPane.showInputDialog("Enter Output File Name",Utils.getFileName(initialName));
+        outputFileName = JOptionPane.showInputDialog("Enter Output File Name", Utils.getFileName(inputFilePath));
         return outputFileName;
     }
 }
