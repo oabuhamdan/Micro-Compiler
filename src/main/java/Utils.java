@@ -1,8 +1,11 @@
 
+import org.antlr.v4.runtime.Token;
+
 import java.io.*;
 
 /**
  * Class that have Utils to use from anywhere
+ *
  * @author Osama AbuHamdan
  * @author Saad Al-Jalowdi
  */
@@ -10,7 +13,8 @@ public class Utils {
 
     /**
      * Ouptuts user message to a file.
-     * @param message user's message
+     *
+     * @param message  user's message
      * @param fileName output file name
      */
     public static void outputMessageToFile(String message, String fileName) {
@@ -40,6 +44,5 @@ public class Utils {
         String fileName = path.substring(lastSeparatorIndex + 1, lastPointIndex);
         return fileName;
     }
-
-
 }
+

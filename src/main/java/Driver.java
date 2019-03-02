@@ -1,5 +1,6 @@
 
 import org.antlr.v4.runtime.*;
+
 import java.io.*;
 import javax.swing.JOptionPane;
 
@@ -33,6 +34,7 @@ public class Driver {
         parser.program();
         String validityMessage = parser.getNumberOfSyntaxErrors() == 0 ? "Accepted" : "Not Accepted";       //If parser have errors then its not valid parse tree
         Utils.outputMessageToFile(validityMessage, outputFileName(inputFile));//second param is the input file path , to get output file name with the same name
+
     }
 
     /**
@@ -41,7 +43,7 @@ public class Driver {
      * @param inputFilePath input file path, to use its name with the output file.
      * @return output file name.
      */
-    static String outputFileName(String inputFilePath) {
+    private static String outputFileName(String inputFilePath) {
         String outputFileName;
         outputFileName = JOptionPane.showInputDialog("Enter Output File Name", Utils.getFileName(inputFilePath));
         return outputFileName;
