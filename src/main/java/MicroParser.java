@@ -526,6 +526,18 @@ public class MicroParser extends Parser {
 		}
 	}
 
+	public static class IntKeyWordContext extends Var_typeContext {
+		public IntKeyWordContext(Var_typeContext ctx) {
+			copyFrom(ctx);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof MicroVisitor) return ((MicroVisitor<? extends T>) visitor).visitIntKeyWord(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
 	public final Var_typeContext var_type() throws RecognitionException {
 		Var_typeContext _localctx = new Var_typeContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_var_type);
@@ -542,7 +554,7 @@ public class MicroParser extends Parser {
 				}
 				break;
 			case T__9:
-				_localctx = new FloatKeyWordContext(_localctx);
+				_localctx = new IntKeyWordContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(124);

@@ -93,6 +93,17 @@ public class MicroBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override
+	public T visitIntKeyWord(MicroParser.IntKeyWordContext ctx) {
+		return visitChildren(ctx);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitFloatOrIntVarType(MicroParser.FloatOrIntVarTypeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
