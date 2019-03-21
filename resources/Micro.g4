@@ -8,7 +8,7 @@ IDENTIFIER: ('A'..'Z'|'a'..'z')('A'..'Z'|'a'..'z'|'0'..'9')* ;
 WS : (' '|'\t'|'\r'|'\n')+ -> skip ;  // skip spaces, tabs, newlines
 INTLITERAL : '0'|('1'..'9')('0'..'9')* ;
 FLOATLITERAL : ('0'|(('1'..'9')('0'..'9')*)).('0'|(('0'..'9')*)('1'..'9')) ;
-STRINGLITERAL : '"' .*? '"' ;
+STRINGLITERAL : '"' .*?  '"' ;
 COMMENT : '--' .*? '\n'  -> skip ;
 
 OPERATOR : ':=' | '+' | '-' | '*' | '/' | '=' | '!=' | '<' | '>' | '(' | ')' | ';' | ',' | '<=' | '>=' ;
@@ -121,8 +121,8 @@ factor_prefix : factor_prefix factor mulop          #FactorPrefix
 factor : primary                #PrimaryFactor
        | call_expr              #CallExpr
        ;
-primary : '(' expr ')'              #Expr
-        | id                        #Id
+primary : '(' expr ')'              #ExprLabel
+        | id                        #IdLabel
         | INTLITERAL                #IntLit
         | FLOATLITERAL              #FloatLit
         ;
@@ -134,6 +134,8 @@ expr_list_tail : ',' expr expr_list_tail        #ExprTail
                |                                #NoExprTail
                ;
 addop : '+'                                     #Plus
-      | '-' ;                                   #Minus
+      | '-'                                     #Minus
+      ;
 mulop : '*'                                     #Mul
-      | '/' ;                                   #Div
+      | '/'                                     #Div
+      ;
