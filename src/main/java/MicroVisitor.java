@@ -80,21 +80,12 @@ public interface MicroVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFloatKeyWord(MicroParser.FloatKeyWordContext ctx);
 	/**
-     * Visit a parse tree produced by the {@code IntKeyWord}
-     * labeled alternative in {@link MicroParser#var_type}.
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitIntKeyWord(MicroParser.IntKeyWordContext ctx);
-
-    /**
-     * Visit a parse tree produced by the {@code FloatOrIntVarType}
-     * labeled alternative in {@link MicroParser#any_type}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitFloatOrIntVarType(MicroParser.FloatOrIntVarTypeContext ctx);
+	 * Visit a parse tree produced by the {@code FloatOrIntVarType}
+	 * labeled alternative in {@link MicroParser#any_type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloatOrIntVarType(MicroParser.FloatOrIntVarTypeContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code VoidKeyWord}
 	 * labeled alternative in {@link MicroParser#any_type}.
