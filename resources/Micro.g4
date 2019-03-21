@@ -33,7 +33,7 @@ str	    :	STRINGLITERAL ;
 /*	Variable	Declaration	*/
 var_decl    :	var_type	id_list	';';
 var_type	:	'FLOAT'         #FloatKeyWord
-                |'INT'          #FloatKeyWord
+                |'INT'          #IntKeyWord
                 ;
 
 any_type	:	var_type        #FloatOrIntVarType
