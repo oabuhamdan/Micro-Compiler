@@ -1,5 +1,6 @@
 
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
 
 import java.io.*;
@@ -32,8 +33,9 @@ public class Driver {
         MicroLexer lexer = new MicroLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         MicroParser parser = new MicroParser(tokens);
-        Tree parseTree= parser.program();
-        MicroBaseVisitor visitor=new MicroBaseVisitor();
+        Visitor visitor=new Visitor();
+        ParseTree parseTree=parser.program();
+        visitor.visit(parseTree);
 //        String validityMessage = parser.getNumberOfSyntaxErrors() == 0 ? "Accepted" : "Not Accepted";       //If parser have errors then its not valid parse tree
 //        Utils.outputMessageToFile(validityMessage, outputFileName(inputFile));//second param is the input file path , to get output file name with the same name
 
