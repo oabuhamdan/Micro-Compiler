@@ -286,15 +286,26 @@ public class MicroParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
+	public static class VarDeclContext extends DeclContext {
+		public Var_declContext var_decl() {
+			return getRuleContext(Var_declContext.class,0);
+		}
+		public DeclContext decl() {
+			return getRuleContext(DeclContext.class,0);
+		}
+		public VarDeclContext(DeclContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MicroVisitor ) return ((MicroVisitor<? extends T>)visitor).visitVarDecl(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class StringDeclContext extends DeclContext {
 		public String_declContext string_decl() {
 			return getRuleContext(String_declContext.class,0);
 		}
 		public DeclContext decl() {
 			return getRuleContext(DeclContext.class,0);
-		}
-		public Var_declContext var_decl() {
-			return getRuleContext(Var_declContext.class,0);
 		}
 		public StringDeclContext(DeclContext ctx) { copyFrom(ctx); }
 		@Override
@@ -331,7 +342,7 @@ public class MicroParser extends Parser {
 				break;
 			case T__8:
 			case T__9:
-				_localctx = new StringDeclContext(_localctx);
+				_localctx = new VarDeclContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(105);

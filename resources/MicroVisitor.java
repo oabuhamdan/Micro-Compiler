@@ -41,6 +41,13 @@ public interface MicroVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStringDecl(MicroParser.StringDeclContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code VarDecl}
+	 * labeled alternative in {@link MicroParser#decl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVarDecl(MicroParser.VarDeclContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code NoDecl}
 	 * labeled alternative in {@link MicroParser#decl}.
 	 * @param ctx the parse tree

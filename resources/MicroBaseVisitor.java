@@ -51,6 +51,13 @@ public class MicroBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitVarDecl(MicroParser.VarDeclContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitNoDecl(MicroParser.NoDeclContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -498,7 +505,7 @@ public class MicroBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
-	 *
+	 */
 	@Override public T visitNoExprTail(MicroParser.NoExprTailContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

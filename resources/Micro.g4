@@ -3,7 +3,7 @@ grammar Micro;
 
 authors:'OSAMA ABUAMDAN' 'SAAD JALOWDI';
 
-KEYWORD: 'PROGRAM1' | 'BEGIN' | 'END' | 'FUNCTION' | 'READ' | 'WRITE' | 'IF' | 'ELSE' |'ENDIF' | 'FOR' |'ENDFOR' | 'RETURN' | 'INT' | 'VOID' | 'STRING' | 'FLOAT' ;
+KEYWORD: 'PROGRAM' | 'BEGIN' | 'END' | 'FUNCTION' | 'READ' | 'WRITE' | 'IF' | 'ELSE' |'ENDIF' | 'FOR' |'ENDFOR' | 'RETURN' | 'INT' | 'VOID' | 'STRING' | 'FLOAT' ;
 IDENTIFIER: ('A'..'Z'|'a'..'z')('A'..'Z'|'a'..'z'|'0'..'9')* ;
 WS : (' '|'\t'|'\r'|'\n')+ -> skip ;  // skip spaces, tabs, newlines
 INTLITERAL : '0'|('1'..'9')('0'..'9')* ;
@@ -17,11 +17,11 @@ OPERATOR : ':=' | '+' | '-' | '*' | '/' | '=' | '!=' | '<' | '>' | '(' | ')' | '
 //PARSER RULES
 
 /*	Program	*/
-program	:	'PROGRAM'	id	'BEGIN'   pgm_body    'END' ;
+program	:   'PROGRAM'	id	'BEGIN'   pgm_body    'END' ;
 id	:	IDENTIFIER ;
 pgm_body    :	decl    func_declarations ;
 decl    :	string_decl	decl        #StringDecl
-            |var_decl	decl	    #StringDecl
+            |var_decl	decl	    #VarDecl
             |	                    #NoDecl
             ;
 
