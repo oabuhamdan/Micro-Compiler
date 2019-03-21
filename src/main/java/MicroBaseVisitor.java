@@ -97,7 +97,6 @@ public class MicroBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	public T visitIntKeyWord(MicroParser.IntKeyWordContext ctx) {
 		return visitChildren(ctx);
 	}
-
 	/**
 	 * {@inheritDoc}
 	 *

@@ -525,12 +525,10 @@ public class MicroParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-
 	public static class IntKeyWordContext extends Var_typeContext {
 		public IntKeyWordContext(Var_typeContext ctx) {
 			copyFrom(ctx);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if (visitor instanceof MicroVisitor) return ((MicroVisitor<? extends T>) visitor).visitIntKeyWord(this);
