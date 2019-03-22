@@ -1,7 +1,6 @@
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.Tree;
 
 import java.io.*;
 import javax.swing.JOptionPane;
@@ -40,7 +39,6 @@ public class Driver {
 //        Utils.outputMessageToFile(validityMessage, outputFileName(inputFile));//second param is the input file path , to get output file name with the same name
 
     }
-
     /**
      * Shows window to enter output file name, or just press enter to use the default name.
      *
@@ -53,3 +51,5 @@ public class Driver {
         return outputFileName;
     }
 }
+
+///Regex for multi line comment: \*[\s\S]*?\*/

@@ -1,26 +1,12 @@
 public class Visitor extends MicroBaseVisitor {
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitProgram(MicroParser.ProgramContext ctx) {
         visitPgm_body(ctx.pgm_body());
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitPgm_body(MicroParser.Pgm_bodyContext ctx) {
         visit(ctx.decl());
@@ -28,14 +14,7 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitFuncDecl(MicroParser.FuncDeclContext ctx) {
         visitFunc_decl(ctx.func_decl());
@@ -43,27 +22,13 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitNoFuncDecl(MicroParser.NoFuncDeclContext ctx) {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitFunc_decl(MicroParser.Func_declContext ctx) {
         visit(ctx.param_decl_list());
@@ -71,14 +36,7 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitParamDeclList(MicroParser.ParamDeclListContext ctx) {
         visitParam_decl(ctx.param_decl());
@@ -86,14 +44,7 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitParamDeclTail(MicroParser.ParamDeclTailContext ctx) {
         visitParam_decl(ctx.param_decl());
@@ -101,14 +52,7 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitParam_decl(MicroParser.Param_declContext ctx) {
         visit(ctx.var_type());
@@ -116,40 +60,19 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitNoParamTail(MicroParser.NoParamTailContext ctx) {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitNoParamList(MicroParser.NoParamListContext ctx) {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+    //decl start
     @Override
     public Object visitStringDecl(MicroParser.StringDeclContext ctx) {
         visitString_decl(ctx.string_decl());
@@ -157,14 +80,7 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitVarDecl(MicroParser.VarDeclContext ctx) {
         visitVar_decl(ctx.var_decl());
@@ -172,14 +88,13 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+    @Override
+    public Object visitNoDecl(MicroParser.NoDeclContext ctx) {
+        return null;
+    }
+    //decl End
+
+
     @Override
     public Object visitString_decl(MicroParser.String_declContext ctx) {
         System.out.println("String");
@@ -187,29 +102,27 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitVar_decl(MicroParser.Var_declContext ctx) {
         visit(ctx.var_type());
         visitId_list(ctx.id_list());
         return null;
     }
+    //start var_type
+    @Override
+    public Object visitFloatKeyWord(MicroParser.FloatKeyWordContext ctx) {
+        System.out.println("Float");
+        return null;
+    }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+    @Override
+    public Object visitIntKeyWord(MicroParser.IntKeyWordContext ctx) {
+        System.out.println("Int");
+        return null;
+    }
+    //end var_type
+
     @Override
     public Object visitId_list(MicroParser.Id_listContext ctx) {
         visitId(ctx.id());
@@ -217,14 +130,7 @@ public class Visitor extends MicroBaseVisitor {
         return  null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+    //start id_tail
     @Override
     public Object visitIDTail(MicroParser.IDTailContext ctx) {
         visitId(ctx.id());
@@ -232,68 +138,13 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+
     @Override
     public Object visitNoTail(MicroParser.NoTailContext ctx) {
         return null;
     }
+    //end id_tail
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
-    @Override
-    public Object visitFloatKeyWord(MicroParser.FloatKeyWordContext ctx) {
-        System.out.println("Float");
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
-    @Override
-    public Object visitIntKeyWord(MicroParser.IntKeyWordContext ctx) {
-        System.out.println("Int");
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
-    @Override
-    public Object visitNoDecl(MicroParser.NoDeclContext ctx) {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
     @Override
     public Object visitId(MicroParser.IdContext ctx) {
         System.out.println(ctx.getText());
