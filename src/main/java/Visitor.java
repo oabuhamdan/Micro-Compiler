@@ -13,64 +13,7 @@ public class Visitor extends MicroBaseVisitor {
         visit(ctx.func_declarations());
         return null;
     }
-
-
-    @Override
-    public Object visitFuncDecl(MicroParser.FuncDeclContext ctx) {
-        visitFunc_decl(ctx.func_decl());
-        visit(ctx.func_declarations());
-        return null;
-    }
-
-
-    @Override
-    public Object visitNoFuncDecl(MicroParser.NoFuncDeclContext ctx) {
-        return null;
-    }
-
-
-    @Override
-    public Object visitFunc_decl(MicroParser.Func_declContext ctx) {
-        visit(ctx.param_decl_list());
-        visitFunc_body(ctx.func_body());
-        return null;
-    }
-
-
-    @Override
-    public Object visitParamDeclList(MicroParser.ParamDeclListContext ctx) {
-        visitParam_decl(ctx.param_decl());
-        visit(ctx.param_decl_tail());
-        return null;
-    }
-
-
-    @Override
-    public Object visitParamDeclTail(MicroParser.ParamDeclTailContext ctx) {
-        visitParam_decl(ctx.param_decl());
-        visit(ctx.param_decl_tail());
-        return null;
-    }
-
-
-    @Override
-    public Object visitParam_decl(MicroParser.Param_declContext ctx) {
-        visit(ctx.var_type());
-        visitId(ctx.id());
-        return null;
-    }
-
-
-    @Override
-    public Object visitNoParamTail(MicroParser.NoParamTailContext ctx) {
-        return null;
-    }
-
-
-    @Override
-    public Object visitNoParamList(MicroParser.NoParamListContext ctx) {
-        return null;
-    }
+    /**         Global Variable Declaration                    */
 
     //decl start
     @Override
@@ -148,6 +91,65 @@ public class Visitor extends MicroBaseVisitor {
     @Override
     public Object visitId(MicroParser.IdContext ctx) {
         System.out.println(ctx.getText());
+        return null;
+    }
+
+    /**         Function Declaration                    */
+
+
+    @Override
+    public Object visitFuncDecl(MicroParser.FuncDeclContext ctx) {
+        visitFunc_decl(ctx.func_decl());
+        visit(ctx.func_declarations());
+        return null;
+    }
+
+    @Override
+    public Object visitFunc_decl(MicroParser.Func_declContext ctx) {
+        //visitId(ctx.id());        TODO:: print function name
+        visit(ctx.param_decl_list());
+        //visitFunc_body(ctx.func_body());
+        return null;
+    }
+
+    /** Function Parameters **/
+
+    @Override
+    public Object visitParamDeclList(MicroParser.ParamDeclListContext ctx) {
+        visitParam_decl(ctx.param_decl());
+        visit(ctx.param_decl_tail());
+        return null;
+    }
+
+    @Override
+    public Object visitParam_decl(MicroParser.Param_declContext ctx) {
+        visit(ctx.var_type());
+        visitId(ctx.id());
+        return null;
+    }
+
+    //start param_decl_tail
+
+    @Override
+    public Object visitParamDeclTail(MicroParser.ParamDeclTailContext ctx) {
+        visitParam_decl(ctx.param_decl());
+        visit(ctx.param_decl_tail());
+        return null;
+    }
+
+    @Override
+    public Object visitNoParamTail(MicroParser.NoParamTailContext ctx) {
+        return null;
+    }
+    //end param_decl_tail
+
+    @Override
+    public Object visitNoParamList(MicroParser.NoParamListContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Object visitNoFuncDecl(MicroParser.NoFuncDeclContext ctx) {
         return null;
     }
 }
