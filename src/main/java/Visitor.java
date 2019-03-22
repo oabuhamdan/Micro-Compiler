@@ -106,9 +106,9 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitFunc_decl(MicroParser.Func_declContext ctx) {
-        //visitId(ctx.id());        TODO:: print function name
+        visitId(ctx.id());        //TODO:: print function name
         visit(ctx.param_decl_list());
-        //visitFunc_body(ctx.func_body());
+        visitFunc_body(ctx.func_body());
         return null;
     }
 
@@ -152,4 +152,93 @@ public class Visitor extends MicroBaseVisitor {
     public Object visitNoFuncDecl(MicroParser.NoFuncDeclContext ctx) {
         return null;
     }
+
+    /**            Function Body                     */
+
+    @Override
+    public Object visitFunc_body(MicroParser.Func_bodyContext ctx) {
+        visit(ctx.decl());
+        visit(ctx.stmt_list());
+        return null;
+    }
+
+    //start stmt_list
+    @Override
+    public Object visitStatmnetList(MicroParser.StatmnetListContext ctx) {
+        visit(ctx.stmt());
+        visit(ctx.stmt_list());
+        return null;
+    }
+
+    @Override
+    public Object visitNoStatmnetList(MicroParser.NoStatmnetListContext ctx) {
+        return null;
+    }
+    //end stmt_list
+
+    //start stmt
+    @Override
+    public Object visitBasicStatment(MicroParser.BasicStatmentContext ctx) {
+        //visit(ctx.basic_stmt());
+        return null;
+    }
+
+    @Override
+    public Object visitIfStatment(MicroParser.IfStatmentContext ctx) {
+        visitIf_stmt(ctx.if_stmt());
+        return null;
+    }
+
+    @Override
+    public Object visitForStatment(MicroParser.ForStatmentContext ctx) {
+        visitFor_stmt(ctx.for_stmt());
+        return null;
+    }
+    //end stmt
+
+    //start basic_stmt
+
+    //end basic_stmt
+
+    //start if_stmt
+    @Override
+    public Object visitIf_stmt(MicroParser.If_stmtContext ctx) {
+        visit(ctx.decl());
+        visit(ctx.stmt_list());
+        visit(ctx.else_part());
+        return null;
+    }
+
+    @Override
+    public Object visitElsePart(MicroParser.ElsePartContext ctx) {
+        visit(ctx.decl());
+        visit(ctx.stmt_list());
+        return null;
+    }
+
+    @Override
+    public Object visitNoElsePart(MicroParser.NoElsePartContext ctx) {
+        return null;
+    }
+
+    //end if_stmt
+
+    //start for_stmt
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * @param ctx
+     */
+    @Override
+    public Object visitFor_stmt(MicroParser.For_stmtContext ctx) {
+        visit(ctx.decl());
+        visit(ctx.stmt_list());
+        return null;
+    }
+
+    //end for_stmt
 }
