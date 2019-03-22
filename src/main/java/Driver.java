@@ -37,7 +37,6 @@ public class Driver {
         visitor.visit(parseTree);
 //        String validityMessage = parser.getNumberOfSyntaxErrors() == 0 ? "Accepted" : "Not Accepted";       //If parser have errors then its not valid parse tree
 //        Utils.outputMessageToFile(validityMessage, outputFileName(inputFile));//second param is the input file path , to get output file name with the same name
-
     }
     /**
      * Shows window to enter output file name, or just press enter to use the default name.

@@ -9,6 +9,7 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitPgm_body(MicroParser.Pgm_bodyContext ctx) {
+        System.out.println("<<Global Variables>>");
         visit(ctx.decl());
         visit(ctx.func_declarations());
         return null;
@@ -96,7 +97,6 @@ public class Visitor extends MicroBaseVisitor {
 
     /**         Function Declaration                    */
 
-
     @Override
     public Object visitFuncDecl(MicroParser.FuncDeclContext ctx) {
         visitFunc_decl(ctx.func_decl());
@@ -106,7 +106,7 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitFunc_decl(MicroParser.Func_declContext ctx) {
-        visitId(ctx.id());        //TODO:: print function name
+        System.out.println("<< Block :"+ctx.id().getText()+" Params >>");
         visit(ctx.param_decl_list());
         visitFunc_body(ctx.func_body());
         return null;
@@ -157,6 +157,7 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitFunc_body(MicroParser.Func_bodyContext ctx) {
+        System.out.println("<< Block : Variables >>");
         visit(ctx.decl());
         visit(ctx.stmt_list());
         return null;
@@ -203,6 +204,7 @@ public class Visitor extends MicroBaseVisitor {
     //start if_stmt
     @Override
     public Object visitIf_stmt(MicroParser.If_stmtContext ctx) {
+        System.out.println("<< Block : Variables >>");
         visit(ctx.decl());
         visit(ctx.stmt_list());
         visit(ctx.else_part());
@@ -211,6 +213,7 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitElsePart(MicroParser.ElsePartContext ctx) {
+        System.out.println("<< Block : Variables >>");
         visit(ctx.decl());
         visit(ctx.stmt_list());
         return null;
@@ -224,21 +227,12 @@ public class Visitor extends MicroBaseVisitor {
     //end if_stmt
 
     //start for_stmt
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
     @Override
     public Object visitFor_stmt(MicroParser.For_stmtContext ctx) {
+        System.out.println("<< Block : Variables >>");
         visit(ctx.decl());
         visit(ctx.stmt_list());
         return null;
     }
-
     //end for_stmt
 }
