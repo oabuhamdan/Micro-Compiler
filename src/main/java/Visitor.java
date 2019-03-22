@@ -223,7 +223,6 @@ public class Visitor extends MicroBaseVisitor {
     public Object visitNoElsePart(MicroParser.NoElsePartContext ctx) {
         return null;
     }
-
     //end if_stmt
 
     //start for_stmt
