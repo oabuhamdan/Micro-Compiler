@@ -80,6 +80,77 @@ public class Visitor extends MicroBaseVisitor {
      * @param ctx
      */
     @Override
+    public Object visitParamDeclList(MicroParser.ParamDeclListContext ctx) {
+        visitParam_decl(ctx.param_decl());
+        visit(ctx.param_decl_tail());
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * @param ctx
+     */
+    @Override
+    public Object visitParamDeclTail(MicroParser.ParamDeclTailContext ctx) {
+        visitParam_decl(ctx.param_decl());
+        visit(ctx.param_decl_tail());
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * @param ctx
+     */
+    @Override
+    public Object visitParam_decl(MicroParser.Param_declContext ctx) {
+        visit(ctx.var_type());
+        visitId(ctx.id());
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * @param ctx
+     */
+    @Override
+    public Object visitNoParamTail(MicroParser.NoParamTailContext ctx) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * @param ctx
+     */
+    @Override
+    public Object visitNoParamList(MicroParser.NoParamListContext ctx) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * @param ctx
+     */
+    @Override
     public Object visitStringDecl(MicroParser.StringDeclContext ctx) {
         visitString_decl(ctx.string_decl());
         visit(ctx.decl());
