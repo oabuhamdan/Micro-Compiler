@@ -1,4 +1,8 @@
+import java.util.*;
+
 public class Visitor extends MicroBaseVisitor {
+
+    SymbolTable symbolTable = new SymbolTable();
 
     @Override
     public Object visitProgram(MicroParser.ProgramContext ctx) {
@@ -9,93 +13,109 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitPgm_body(MicroParser.Pgm_bodyContext ctx) {
-        System.out.println("<<Global Variables>>");
-        visit(ctx.decl());
+        //System.out.println("<<Global Variables>>");
+        Map<Object, Object> vars = symbolTable.newScope();
+        vars.putAll((Map) visit(ctx.decl()));
         visit(ctx.func_declarations());
+        symbolTable.printAllScopesInfo();
         return null;
     }
-    /**         Global Variable Declaration                    */
+
+    /**
+     * Global Variable Declaration
+     */
 
     //decl start
     @Override
     public Object visitStringDecl(MicroParser.StringDeclContext ctx) {
-        visitString_decl(ctx.string_decl());
-        visit(ctx.decl());
-        return null;
+        Map map = new HashMap();
+        map.putAll((Map) visitString_decl(ctx.string_decl()));
+        map.putAll((Map) visit(ctx.decl()));
+        return map;
     }
 
 
     @Override
     public Object visitVarDecl(MicroParser.VarDeclContext ctx) {
-        visitVar_decl(ctx.var_decl());
-        visit(ctx.decl());
-        return null;
+        Map vars= new HashMap();
+        vars.putAll((Map) visitVar_decl(ctx.var_decl()));
+        vars.putAll((Map)visit(ctx.decl()));
+        return vars;
     }
 
     @Override
     public Object visitNoDecl(MicroParser.NoDeclContext ctx) {
-        return null;
+        return new HashMap<>();
     }
     //decl End
 
 
     @Override
     public Object visitString_decl(MicroParser.String_declContext ctx) {
-        System.out.println("String");
-        visitId(ctx.id());
-        return null;
+        Map vars = new HashMap();
+        Object id = visitId(ctx.id());
+        vars.put(id, "STRING");
+        return vars;
     }
 
 
     @Override
     public Object visitVar_decl(MicroParser.Var_declContext ctx) {
-        visit(ctx.var_type());
-        visitId_list(ctx.id_list());
-        return null;
+        Map vars = new HashMap();
+        Object type = visit(ctx.var_type());      //Float | Int
+        LinkedList ids= (LinkedList) visitId_list(ctx.id_list());
+        for (Object id:ids) {
+            vars.put(id,type);
+        }
+        return vars;
     }
+
     //start var_type
     @Override
     public Object visitFloatKeyWord(MicroParser.FloatKeyWordContext ctx) {
-        System.out.println("Float");
-        return null;
+        //System.out.println("Float");
+        return "FLOAT";
     }
 
     @Override
     public Object visitIntKeyWord(MicroParser.IntKeyWordContext ctx) {
-        System.out.println("Int");
-        return null;
+        //System.out.println("Int");
+        return "INT";
     }
     //end var_type
 
     @Override
     public Object visitId_list(MicroParser.Id_listContext ctx) {
-        visitId(ctx.id());
-        visit(ctx.id_tail());
-        return  null;
+        LinkedList list = new LinkedList();
+        list.add(visitId(ctx.id()));        //a
+        list.addAll((Collection) visit(ctx.id_tail()));
+        return list;
     }
 
     //start id_tail
     @Override
     public Object visitIDTail(MicroParser.IDTailContext ctx) {
-        visitId(ctx.id());
-        visit(ctx.id_tail());
-        return null;
+        LinkedList list=new LinkedList();
+        list.add(visitId(ctx.id()));//b
+        list.addAll((Collection) visit(ctx.id_tail()));
+        return list;
     }
 
 
     @Override
     public Object visitNoTail(MicroParser.NoTailContext ctx) {
-        return null;
+        return new LinkedList<>();
     }
     //end id_tail
 
     @Override
     public Object visitId(MicroParser.IdContext ctx) {
-        System.out.println(ctx.getText());
-        return null;
+        return ctx.getText();
     }
 
-    /**         Function Declaration                    */
+    /**
+     * Function Declaration
+     */
 
     @Override
     public Object visitFuncDecl(MicroParser.FuncDeclContext ctx) {
@@ -106,13 +126,15 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitFunc_decl(MicroParser.Func_declContext ctx) {
-        System.out.println("<< Block :"+ctx.id().getText()+" Params >>");
+        System.out.println("<< Block :" + ctx.id().getText() + " Params >>");
         visit(ctx.param_decl_list());
         visitFunc_body(ctx.func_body());
         return null;
     }
 
-    /** Function Parameters **/
+    /**
+     * Function Parameters
+     **/
 
     @Override
     public Object visitParamDeclList(MicroParser.ParamDeclListContext ctx) {
@@ -153,7 +175,9 @@ public class Visitor extends MicroBaseVisitor {
         return null;
     }
 
-    /**            Function Body                     */
+    /**
+     * Function Body
+     */
 
     @Override
     public Object visitFunc_body(MicroParser.Func_bodyContext ctx) {
@@ -235,3 +259,12 @@ public class Visitor extends MicroBaseVisitor {
     }
     //end for_stmt
 }
+
+/*
+    INT a, b , c , d;
+	FLOAT dummy1,dummy2;
+	INT z,x,y,w;
+	STRING name :="Osama";
+	FLOAT  dummy3,dummy4;
+
+* */
