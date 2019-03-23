@@ -1,5 +1,8 @@
 PROGRAM test
 BEGIN
+INT a,b,c,d;
+FLOAT hi;
+STRING s:= "test1";
 
 	FUNCTION VOID printout (INT a,INT b,INT c,FLOAT osama)
 	BEGIN
