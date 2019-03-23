@@ -28,7 +28,7 @@ public class Visitor extends MicroBaseVisitor {
     //decl start
     @Override
     public Object visitStringDecl(MicroParser.StringDeclContext ctx) {
-        Map map = new HashMap();
+        Map map = new LinkedHashMap();
         map.putAll((Map) visitString_decl(ctx.string_decl()));
         map.putAll((Map) visit(ctx.decl()));
         return map;
@@ -37,7 +37,7 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitVarDecl(MicroParser.VarDeclContext ctx) {
-        Map vars= new HashMap();
+        Map vars= new LinkedHashMap();
         vars.putAll((Map) visitVar_decl(ctx.var_decl()));
         vars.putAll((Map)visit(ctx.decl()));
         return vars;
@@ -45,14 +45,14 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitNoDecl(MicroParser.NoDeclContext ctx) {
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
     //decl End
 
 
     @Override
     public Object visitString_decl(MicroParser.String_declContext ctx) {
-        Map vars = new HashMap();
+        Map vars = new LinkedHashMap();
         Object id = visitId(ctx.id());
         vars.put(id, "STRING");
         return vars;
@@ -61,7 +61,7 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitVar_decl(MicroParser.Var_declContext ctx) {
-        Map vars = new HashMap();
+        Map vars = new LinkedHashMap();
         Object type = visit(ctx.var_type());      //Float | Int
         LinkedList ids= (LinkedList) visitId_list(ctx.id_list());
         for (Object id:ids) {
@@ -259,12 +259,3 @@ public class Visitor extends MicroBaseVisitor {
     }
     //end for_stmt
 }
-
-/*
-    INT a, b , c , d;
-	FLOAT dummy1,dummy2;
-	INT z,x,y,w;
-	STRING name :="Osama";
-	FLOAT  dummy3,dummy4;
-
-* */

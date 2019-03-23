@@ -1,17 +1,17 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SymbolTable {
-    private List<HashMap<Object, Object>> table;
+    private List<LinkedHashMap<Object, Object>> table;
 
     public SymbolTable() {
         this.table = new ArrayList<>();
     }
 
     public Map<Object, Object> newScope() {
-        HashMap<Object, Object> localVariables = new HashMap<>();
+        LinkedHashMap<Object, Object> localVariables = new LinkedHashMap<>();
         table.add(localVariables);
         return localVariables;
     }
@@ -19,7 +19,7 @@ public class SymbolTable {
 
     public void printAllScopesInfo() {
         int count=0;
-        for ( HashMap<Object, Object> map : table ) {
+        for ( LinkedHashMap<Object, Object> map : table ) {
             System.out.println("<<Block #"+ ++count+" Variables>>");
             for ( Map.Entry<Object, Object> entry : map.entrySet() ) {
                 Object type = entry.getKey();
