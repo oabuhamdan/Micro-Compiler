@@ -3,8 +3,10 @@ import java.util.*;
 public class Visitor extends MicroBaseVisitor {
 
     private SymbolTable symbolTable = new SymbolTable();
+    private int count = 0;
 
     public SymbolTable getSymbolTable() {
+
         return symbolTable;
     }
 
@@ -17,6 +19,7 @@ public class Visitor extends MicroBaseVisitor {
     @Override
     public Object visitPgm_body(MicroParser.Pgm_bodyContext ctx) {
         Map<Object, Object> vars = symbolTable.newScope();      //Global Scope
+        symbolTable.setName("Global Scope");
         vars.putAll((Map) visit(ctx.decl()));       //Global Variables
         visit(ctx.func_declarations());             //Functions
         return null;
@@ -52,7 +55,7 @@ public class Visitor extends MicroBaseVisitor {
     public Object visitString_decl(MicroParser.String_declContext ctx) {
         Map vars = new LinkedHashMap();
         Object id = visitId(ctx.id());
-        vars.put(id, "STRING");
+        vars.put(id, "STRING" + " : " + ctx.str().getText());
         return vars;
     }
 
@@ -61,7 +64,7 @@ public class Visitor extends MicroBaseVisitor {
         Map vars = new LinkedHashMap();
         Object type = visit(ctx.var_type());      //Float | Int
         LinkedList ids = (LinkedList) visitId_list(ctx.id_list());
-        for ( Object id : ids ) {
+        for (Object id : ids) {
             vars.put(id, type);
         }
         return vars;
@@ -121,6 +124,7 @@ public class Visitor extends MicroBaseVisitor {
     @Override
     public Object visitFunc_decl(MicroParser.Func_declContext ctx) {
         Map<Object, Object> vars = symbolTable.newScope();      //Function Variables
+        symbolTable.setName(ctx.id().getText());
         vars.putAll((Map) visit(ctx.param_decl_list()));
         vars.putAll((Map) visitFunc_body(ctx.func_body()));
         return null;
@@ -212,6 +216,7 @@ public class Visitor extends MicroBaseVisitor {
     @Override
     public Object visitIf_stmt(MicroParser.If_stmtContext ctx) {
         Map ifScope = symbolTable.newScope();
+        symbolTable.setName("Block #" + ++count);
         ifScope.putAll((Map) visit(ctx.decl()));
         visit(ctx.stmt_list());
         visit(ctx.else_part());
@@ -221,6 +226,7 @@ public class Visitor extends MicroBaseVisitor {
     @Override
     public Object visitElsePart(MicroParser.ElsePartContext ctx) {
         Map elseScope = symbolTable.newScope();
+        symbolTable.setName("Block #" + ++count);
         elseScope.putAll((Map) visit(ctx.decl()));
         visit(ctx.stmt_list());
         return null;
@@ -236,6 +242,7 @@ public class Visitor extends MicroBaseVisitor {
     @Override
     public Object visitFor_stmt(MicroParser.For_stmtContext ctx) {
         Map forScope = symbolTable.newScope();
+        symbolTable.setName("Block #" + ++count);
         forScope.putAll((Map) visit(ctx.decl()));
         visit(ctx.stmt_list());
         return null;

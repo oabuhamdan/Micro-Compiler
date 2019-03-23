@@ -1,13 +1,16 @@
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SymbolTable {
     private List<LinkedHashMap<Object, Object>> table;
+    private List<String> names;
 
     public SymbolTable() {
         this.table = new ArrayList<>();
+        this.names = new ArrayList<>();
+    }
+
+    public void setName(String s) {
+        names.add(s);
     }
 
     public Map<Object, Object> newScope() {
@@ -18,14 +21,17 @@ public class SymbolTable {
 
 
     public void printAllScopesInfo() {
-        int count=0;
-        for ( LinkedHashMap<Object, Object> map : table ) {
-            System.out.println("<<Block #"+ ++count+" Variables>>");
-            for ( Map.Entry<Object, Object> entry : map.entrySet() ) {
-                Object type = entry.getKey();
-                Object id = entry.getValue();
-                System.out.println(type + " : " + id);
+        Iterator namesIterator = names.iterator();
+        for (LinkedHashMap<Object, Object> map : table) {
+            if (namesIterator.hasNext())
+                System.out.println("<<" + namesIterator.next() + " variables>>");
+            for (Map.Entry<Object, Object> entry : map.entrySet()) {
+                Object id = entry.getKey();
+                Object type = entry.getValue();
+                System.out.println(id + " : " + type);
             }
+            System.out.println();
         }
     }
+
 }
