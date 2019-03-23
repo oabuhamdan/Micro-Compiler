@@ -35,6 +35,7 @@ public class Driver {
         Visitor visitor=new Visitor();
         ParseTree parseTree=parser.program();
         visitor.visit(parseTree);
+        visitor.getSymbolTable().printAllScopesInfo();
 //        String validityMessage = parser.getNumberOfSyntaxErrors() == 0 ? "Accepted" : "Not Accepted";       //If parser have errors then its not valid parse tree
 //        Utils.outputMessageToFile(validityMessage, outputFileName(inputFile));//second param is the input file path , to get output file name with the same name
     }
@@ -50,5 +51,3 @@ public class Driver {
         return outputFileName;
     }
 }
-
-///Regex for multi line comment: \*[\s\S]*?\*/

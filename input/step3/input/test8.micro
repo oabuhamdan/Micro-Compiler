@@ -1,10 +1,5 @@
 PROGRAM test
 BEGIN
-	INT a, b , c , d;
-	FLOAT dummy1,dummy2;
-	INT z,x,y,w;
-	STRING name :="Osama";
-	FLOAT  dummy3,dummy4;
 
 	FUNCTION VOID printout (INT a,INT b,INT c,FLOAT osama)
 	BEGIN
