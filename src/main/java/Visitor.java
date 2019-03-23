@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Visitor extends MicroBaseVisitor {
 
-    SymbolTable symbolTable = new SymbolTable();
+    private SymbolTable symbolTable = new SymbolTable();
 
     @Override
     public Object visitProgram(MicroParser.ProgramContext ctx) {
@@ -37,9 +37,9 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitVarDecl(MicroParser.VarDeclContext ctx) {
-        Map vars= new LinkedHashMap();
+        Map vars = new LinkedHashMap();
         vars.putAll((Map) visitVar_decl(ctx.var_decl()));
-        vars.putAll((Map)visit(ctx.decl()));
+        vars.putAll((Map) visit(ctx.decl()));
         return vars;
     }
 
@@ -63,9 +63,9 @@ public class Visitor extends MicroBaseVisitor {
     public Object visitVar_decl(MicroParser.Var_declContext ctx) {
         Map vars = new LinkedHashMap();
         Object type = visit(ctx.var_type());      //Float | Int
-        LinkedList ids= (LinkedList) visitId_list(ctx.id_list());
-        for (Object id:ids) {
-            vars.put(id,type);
+        LinkedList ids = (LinkedList) visitId_list(ctx.id_list());
+        for ( Object id : ids ) {
+            vars.put(id, type);
         }
         return vars;
     }
@@ -95,7 +95,7 @@ public class Visitor extends MicroBaseVisitor {
     //start id_tail
     @Override
     public Object visitIDTail(MicroParser.IDTailContext ctx) {
-        LinkedList list=new LinkedList();
+        LinkedList list = new LinkedList();
         list.add(visitId(ctx.id()));//b
         list.addAll((Collection) visit(ctx.id_tail()));
         return list;
@@ -119,6 +119,7 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitFuncDecl(MicroParser.FuncDeclContext ctx) {
+
         visitFunc_decl(ctx.func_decl());
         visit(ctx.func_declarations());
         return null;
@@ -126,9 +127,12 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitFunc_decl(MicroParser.Func_declContext ctx) {
-        System.out.println("<< Block :" + ctx.id().getText() + " Params >>");
-        visit(ctx.param_decl_list());
-        visitFunc_body(ctx.func_body());
+        //System.out.println("<< Block :" + ctx.id().getText() + " Params >>");
+        Map<Object, Object> vars = symbolTable.newScope();
+        Map temp = (Map) visit(ctx.param_decl_list());
+        Map temp2 = (Map) visitFunc_body(ctx.func_body());
+        vars.putAll(temp);
+        vars.putAll(temp2);
         return null;
     }
 
@@ -136,43 +140,41 @@ public class Visitor extends MicroBaseVisitor {
      * Function Parameters
      **/
 
-    @Override
-    public Object visitParamDeclList(MicroParser.ParamDeclListContext ctx) {
-        visitParam_decl(ctx.param_decl());
-        visit(ctx.param_decl_tail());
-        return null;
-    }
 
     @Override
     public Object visitParam_decl(MicroParser.Param_declContext ctx) {
-        visit(ctx.var_type());
-        visitId(ctx.id());
-        return null;
+        Map vars = new LinkedHashMap();
+        Object type = visit(ctx.var_type());
+        Object id = visitId(ctx.id());
+        vars.put(id, type);
+        return vars;
     }
 
+    @Override
+    public Object visitParamDeclList(MicroParser.ParamDeclListContext ctx) {
+        return paramListVisitor(ctx.param_decl(), ctx.param_decl_tail());
+    }
     //start param_decl_tail
 
     @Override
     public Object visitParamDeclTail(MicroParser.ParamDeclTailContext ctx) {
-        visitParam_decl(ctx.param_decl());
-        visit(ctx.param_decl_tail());
-        return null;
+        return paramListVisitor(ctx.param_decl(), ctx.param_decl_tail());
     }
 
     @Override
     public Object visitNoParamTail(MicroParser.NoParamTailContext ctx) {
-        return null;
+        return new LinkedHashMap<>();
     }
     //end param_decl_tail
 
     @Override
     public Object visitNoParamList(MicroParser.NoParamListContext ctx) {
-        return null;
+        return new LinkedHashMap<>();
     }
 
     @Override
     public Object visitNoFuncDecl(MicroParser.NoFuncDeclContext ctx) {
-        return null;
+        return new LinkedHashMap<>();
     }
 
     /**
@@ -181,23 +183,23 @@ public class Visitor extends MicroBaseVisitor {
 
     @Override
     public Object visitFunc_body(MicroParser.Func_bodyContext ctx) {
-        System.out.println("<< Block : Variables >>");
-        visit(ctx.decl());
+        //System.out.println("<< Block : Variables >>");
+        Map vars = (Map) visit(ctx.decl());     //Func Variable
         visit(ctx.stmt_list());
-        return null;
+        return vars;
     }
 
     //start stmt_list
     @Override
     public Object visitStatmnetList(MicroParser.StatmnetListContext ctx) {
-        visit(ctx.stmt());
-        visit(ctx.stmt_list());
+        visit(ctx.stmt());          //if 1
+        visit(ctx.stmt_list());         // for if
         return null;
     }
 
     @Override
     public Object visitNoStatmnetList(MicroParser.NoStatmnetListContext ctx) {
-        return null;
+        return new LinkedHashMap<>();
     }
     //end stmt_list
 
@@ -221,25 +223,25 @@ public class Visitor extends MicroBaseVisitor {
     }
     //end stmt
 
-    //start basic_stmt
-
-    //end basic_stmt
-
     //start if_stmt
     @Override
     public Object visitIf_stmt(MicroParser.If_stmtContext ctx) {
-        System.out.println("<< Block : Variables >>");
-        visit(ctx.decl());
+        //System.out.println("<< Block : Variables >>");
+        Map map=symbolTable.newScope();
+        Map vars= (Map) visit(ctx.decl());
         visit(ctx.stmt_list());
         visit(ctx.else_part());
+        map.putAll(vars);
         return null;
     }
 
     @Override
     public Object visitElsePart(MicroParser.ElsePartContext ctx) {
-        System.out.println("<< Block : Variables >>");
-        visit(ctx.decl());
+        //System.out.println("<< Block : Variables >>");
+        Map map=symbolTable.newScope();
+        Map vars= (Map) visit(ctx.decl());
         visit(ctx.stmt_list());
+        map.putAll(vars);
         return null;
     }
 
@@ -252,10 +254,21 @@ public class Visitor extends MicroBaseVisitor {
     //start for_stmt
     @Override
     public Object visitFor_stmt(MicroParser.For_stmtContext ctx) {
-        System.out.println("<< Block : Variables >>");
-        visit(ctx.decl());
+        //System.out.println("<< Block : Variables >>");
+        Map map=symbolTable.newScope();
+        Map vars= (Map) visit(ctx.decl());
         visit(ctx.stmt_list());
+        map.putAll(vars);
         return null;
     }
     //end for_stmt
+
+    private Object paramListVisitor(MicroParser.Param_declContext param_declContext, MicroParser.Param_decl_tailContext param_decl_tailContext) {
+        Map vars = new LinkedHashMap();
+        Map temp1 = (Map) visitParam_decl(param_declContext);  //b
+        vars.putAll(temp1);
+        Map temp2 = (Map) visit(param_decl_tailContext);  //c
+        vars.putAll(temp2);
+        return vars;
+    }
 }
