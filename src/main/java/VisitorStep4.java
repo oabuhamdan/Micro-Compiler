@@ -6,7 +6,7 @@ public class VisitorStep4 extends Visitor {
     LinkedHashMap<Object, Object> globalScope;
     IR ir = new IR();
     int tempCounter = 0, labelCounter = 0;
-
+    boolean addop = false, subop = false;
 
     public VisitorStep4(SymbolTable symbolTable) {
         globalScope = symbolTable.getTable().get(0);
@@ -88,30 +88,43 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitExpr(MicroParser.ExprContext ctx) {
+        String prefix;
+        String factor;
         visit(ctx.expr_prefix());
-        String factor = visitTerm(ctx.term()).toString();//b*d
+        factor = visitTerm(ctx.term()).toString();
+        if (addop) {
+            ir.addStatement(new IR_Statement("ADD", factor, "T", "$T" + ++tempCounter));
+            addop = false;
+        } else if (subop) {
+            ir.addStatement(new IR_Statement("SUB", factor, "$T", "$T" + ++tempCounter));
+            subop = false;
+        }
 
-        return factor;
+//        factor = visitTerm(ctx.term()).toString();
+        if (factor.startsWith("$"))
+            return factor + ++tempCounter;
+        else
+            return factor;
     }
 
     @Override
     public Object visitExprPrefix(MicroParser.ExprPrefixContext ctx) {
         visit(ctx.expr_prefix());//epsilon
-        visitTerm(ctx.term());
+        String prefix = visitTerm(ctx.term()).toString();
         visit(ctx.addop());//+
-
-        return null;
+        return prefix;
     }
 
     @Override
     public Object visitTerm(MicroParser.TermContext ctx) {
         IR_Statement term;
-        if (visit(ctx.factor_prefix()) != null) {
-            term = (IR_Statement) visit(ctx.factor_prefix());
+        String result;
+        if ((term = (IR_Statement) visit(ctx.factor_prefix())) != null) {
             term.setOp2(visit(ctx.factor()).toString());
-            term.setResultOrLabel("$T" + ++tempCounter);
+            result = "$T" + ++tempCounter;
+            term.setResultOrLabel(result);
             ir.addStatement(term);
-            return "$T" + ++tempCounter;
+            return "$T";
         } else {
             return visit(ctx.factor());
         }
@@ -119,11 +132,23 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitFactorPrefix(MicroParser.FactorPrefixContext ctx) {
-        visit(ctx.factor_prefix());//epsilon
-        String factor = visit(ctx.factor()).toString();//a
-        String opcode = visit(ctx.mulop()).toString();//*
+        IR_Statement factorPrefix = null;
+        String factor;
+        String opcode;
+        String result;
+        if ((factorPrefix = (IR_Statement) (visit(ctx.factor_prefix()))) != null) {
+            factor = visit(ctx.factor()).toString();//a
+            factorPrefix.setOp2(factor);
+            result = "$T" + ++tempCounter;
+            opcode = visit(ctx.mulop()).toString();//*
+            factorPrefix.setResultOrLabel(result);
+            ir.addStatement(factorPrefix);
+        } else {
+            result = visit(ctx.factor()).toString();//a
+            opcode = visit(ctx.mulop()).toString();//*
+        }
+        return new IR_Statement(opcode, result, "", "");
 
-        return new IR_Statement(opcode, factor, "", "");
     }
 
     @Override
@@ -133,13 +158,11 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitExprLabel(MicroParser.ExprLabelContext ctx) {
-        visit(ctx.expr());
-        return null;
+        return visit(ctx.expr());
     }
 
     @Override
     public Object visitIdLabel(MicroParser.IdLabelContext ctx) {
-
         return ctx.id().getText();
     }
 
@@ -156,11 +179,13 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitPlus(MicroParser.PlusContext ctx) {
+        addop = true;
         return null;
     }
 
     @Override
     public Object visitMinus(MicroParser.MinusContext ctx) {
+        subop = true;
         return null;
     }
 

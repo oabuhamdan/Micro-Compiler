@@ -16,9 +16,8 @@ BEGIN
           READ(c);
           WRITE(msg2, newline);
           READ(d);
-
           e := a * c + b * d;
-          
+
           WRITE(msg3, e, newline);
 
 	END	
