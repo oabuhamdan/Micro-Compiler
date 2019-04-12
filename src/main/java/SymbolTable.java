@@ -9,6 +9,10 @@ public class SymbolTable {
         this.names = new ArrayList<>();
     }
 
+    public List<LinkedHashMap<Object, Object>> getTable() {
+        return table;
+    }
+
     public void setName(String s) {
         names.add(s);
     }

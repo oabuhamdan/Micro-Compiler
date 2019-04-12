@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
  *
  * @author Osama AbuHamdan
  * @author Saad Al-Jalowdi
+ *
+ *
  */
 public class Driver {
 
@@ -35,7 +37,10 @@ public class Driver {
         Visitor visitor=new Visitor();
         ParseTree parseTree=parser.program();
         visitor.visit(parseTree);
-        visitor.getSymbolTable().printAllScopesInfo();
+        //visitor.getSymbolTable().printAllScopesInfo();
+        VisitorStep4 irVisitor = new VisitorStep4(visitor.getSymbolTable());
+        irVisitor.visit(parseTree);
+        irVisitor.ir.printIR();
 //        String validityMessage = parser.getNumberOfSyntaxErrors() == 0 ? "Accepted" : "Not Accepted";       //If parser have errors then its not valid parse tree
 //        Utils.outputMessageToFile(validityMessage, outputFileName(inputFile));//second param is the input file path , to get output file name with the same name
     }
