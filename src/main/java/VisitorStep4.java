@@ -108,13 +108,13 @@ public class VisitorStep4 extends Visitor {
         IR_Statement term;
         if (visit(ctx.factor_prefix()) != null) {
             term = (IR_Statement) visit(ctx.factor_prefix());
-        term.setOp2(visit(ctx.factor()).toString());
-        term.setResultOrLabel("$T" + ++tempCounter);
+            term.setOp2(visit(ctx.factor()).toString());
+            term.setResultOrLabel("$T" + ++tempCounter);
             ir.addStatement(term);
+            return "$T" + ++tempCounter;
         } else {
             return visit(ctx.factor());
         }
-        return null;
     }
 
     @Override
