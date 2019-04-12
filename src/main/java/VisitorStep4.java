@@ -89,9 +89,9 @@ public class VisitorStep4 extends Visitor {
     @Override
     public Object visitExpr(MicroParser.ExprContext ctx) {
         visit(ctx.expr_prefix());
-        visitTerm(ctx.term());//b*d
+        String factor = visitTerm(ctx.term()).toString();//b*d
 
-        return null;
+        return factor;
     }
 
     @Override
@@ -105,10 +105,15 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitTerm(MicroParser.TermContext ctx) {
-        IR_Statement term = (IR_Statement) visit(ctx.factor_prefix());
+        IR_Statement term;
+        if (visit(ctx.factor_prefix()) != null) {
+            term = (IR_Statement) visit(ctx.factor_prefix());
         term.setOp2(visit(ctx.factor()).toString());
         term.setResultOrLabel("$T" + ++tempCounter);
-        ir.addStatement(term);
+            ir.addStatement(term);
+        } else {
+            return visit(ctx.factor());
+        }
         return null;
     }
 
