@@ -237,23 +237,30 @@ public class VisitorStep4 extends Visitor {
     //start if_stmt
     @Override
     public Object visitIf_stmt(MicroParser.If_stmtContext ctx) {
-        String labelBefore = "L" + ++labelCounter;
-        visitCond(ctx.cond());
-        visit(ctx.stmt_list());
-        ir.addStatement(new IR_Statement("Label", labelBefore));
+        String labelAfterIF = "L" + ++labelCounter;             //No else part
 
-        if (visit(ctx.else_part()) != null) ;
-        String labelAfter = "L" + ++labelCounter;
-        ir.addStatement(new IR_Statement("Label", labelAfter));
+        IR_Statement cond = (IR_Statement) visitCond(ctx.cond());       //LE p 10
+
+        cond.setResultOrLabel(labelAfterIF);
+
+        ir.addStatement(cond);  // LE p 10 L1
+        visit(ctx.stmt_list());
+
+        ir.addStatement(new IR_Statement("Label", labelAfterIF));
+
+        if (visit(ctx.else_part()) != null) {
+            String labelAfterElse = "L" + ++labelCounter;
+            ir.addStatement(new IR_Statement("Label", labelAfterElse));
+        }
         return null;
     }
 
     @Override
     public Object visitCond(MicroParser.CondContext ctx) {
-        visitExpr(ctx.expr(0));
+        String lhs = visitExpr(ctx.expr(0)).toString();
         String op = visit(ctx.compare()).toString();
-        visitExpr(ctx.expr(1));
-        return null;
+        String rhs = visitExpr(ctx.expr(1)).toString();
+        return new IR_Statement(op, lhs, rhs, "");
     }
 
     @Override
@@ -290,6 +297,8 @@ public class VisitorStep4 extends Visitor {
     @Override
     public Object visitElsePart(MicroParser.ElsePartContext ctx) {
 
+        String labelAfterElse = "L" + ++labelCounter;          //else part
+        ir.addStatement(new IR_Statement("JUMP", labelAfterElse));
         visit(ctx.stmt_list());
         //label end of if statement
         return null;
