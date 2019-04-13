@@ -19,7 +19,7 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitPgm_body(MicroParser.Pgm_bodyContext ctx) {
-        visit(ctx.func_declarations());             //Functions
+        visit(ctx.func_declarations());
 
         return null;
     }
@@ -77,20 +77,15 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitAssign_expr(MicroParser.Assign_exprContext ctx) {
-        String type = globalScope.get(ctx.id().getText()).toString();
-        if (type.equals("INT")) {
-            ir.addStatement(new IR_Statement("STOREI", visitExpr(ctx.expr()).toString(), ctx.id().getText()));
-        } else if (type.equals("FLOAT")) {
-            ir.addStatement(new IR_Statement("STOREF", visitExpr(ctx.expr()).toString(), ctx.id().getText()));
-        }
+        String type = ctx.id().getText();
+        ir.addStatement(new IR_Statement("STORE" + varType(type), visitExpr(ctx.expr()).toString(), ctx.id().getText()));
         return null;
     }
 
     @Override
     public Object visitExpr(MicroParser.ExprContext ctx) {
-
-        IR_Statement exprPrefix = (IR_Statement) visit(ctx.expr_prefix());      //add and sub
-        String term = visitTerm(ctx.term()).toString();               //mul and div
+        IR_Statement exprPrefix = (IR_Statement) visit(ctx.expr_prefix());
+        String term = visitTerm(ctx.term()).toString();
         if (exprPrefix != null) {
             exprPrefix.setOp2(term);
             String result = "$T" + ++tempCounter;
@@ -105,7 +100,7 @@ public class VisitorStep4 extends Visitor {
     public Object visitExprPrefix(MicroParser.ExprPrefixContext ctx) {
         IR_Statement exprPrefix = (IR_Statement) visit(ctx.expr_prefix());
         String term = visitTerm(ctx.term()).toString();
-        String op = visit(ctx.addop()).toString() + factorType(term);
+        String op = visit(ctx.addop()).toString() + varType(term);
         if (exprPrefix != null) {
             exprPrefix.setOp2(term);
             String result = "$T" + ++tempCounter;
@@ -136,7 +131,7 @@ public class VisitorStep4 extends Visitor {
     public Object visitFactorPrefix(MicroParser.FactorPrefixContext ctx) {
         IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());
         String factor = visit(ctx.factor()).toString();
-        String op = visit(ctx.mulop()).toString() + factorType(factor); // MUL
+        String op = visit(ctx.mulop()).toString() + varType(factor); // MUL
         if (factorPrefix != null) {
             factorPrefix.setOp2(factor);
             String result = "$T" + ++tempCounter;
@@ -200,8 +195,8 @@ public class VisitorStep4 extends Visitor {
     @Override
     public Object visitRead_stmt(MicroParser.Read_stmtContext ctx) {
         List id_list = (List) visitId_list(ctx.id_list());
-        for (Object id : id_list) {
-            ir.addStatement(new IR_Statement("READ" + factorType((String) id), (String) id));
+        for ( Object id : id_list ) {
+            ir.addStatement(new IR_Statement("READ" + varType((String) id), (String) id));
         }
         return null;
     }
@@ -215,8 +210,8 @@ public class VisitorStep4 extends Visitor {
     @Override
     public Object visitWrite_stmt(MicroParser.Write_stmtContext ctx) {
         List id_list = (List) visitId_list(ctx.id_list());
-        for (Object id : id_list) {
-            ir.addStatement(new IR_Statement("WRITE" + factorType((String) id), (String) id));
+        for ( Object id : id_list ) {
+            ir.addStatement(new IR_Statement("WRITE" + varType((String) id), (String) id));
         }
         return null;
     }
@@ -304,21 +299,42 @@ public class VisitorStep4 extends Visitor {
         return "LE";
     }
 
-
     //end if_stmt
 
     //start for_stmt
     @Override
     public Object visitFor_stmt(MicroParser.For_stmtContext ctx) {
+        visit(ctx.init_expr());
+        String labelBeforeCond = "L" + ++labelCounter;
+        String labelAfterIncr = "L" + ++labelCounter;
+        ir.addStatement(new IR_Statement("LABEL", labelBeforeCond));
+        IR_Statement cond = (IR_Statement) visitCond(ctx.cond());
+        cond.setResultOrLabel(labelAfterIncr);
+        ir.addStatement(cond);
         visit(ctx.stmt_list());
+        visit(ctx.incr_expr());
+        ir.addStatement(new IR_Statement("JUMP", labelBeforeCond));
+        ir.addStatement(new IR_Statement("LABEL", labelAfterIncr));
+
+        return null;
+    }
+
+    @Override
+    public Object visitInitAssignExpr(MicroParser.InitAssignExprContext ctx) {
+        visitAssign_expr(ctx.assign_expr());
+        return null;
+    }
+
+    @Override
+    public Object visitIncrAssignExpr(MicroParser.IncrAssignExprContext ctx) {
+        visitAssign_expr(ctx.assign_expr());
         return null;
     }
     //end for_stmt
 
 
     private String lastChoice = "";
-
-    private String factorType(String factor) {
+    private String varType(String factor) {
         Object type = globalScope.get(factor);
         if (type != null) {
             if (type.toString().equals("INT")) {
@@ -332,11 +348,11 @@ public class VisitorStep4 extends Visitor {
             }
         } else if (!factor.startsWith("$")) {
             if (factor.contains(".")) {
-                lastChoice = "F";
-                return "F";
+                lastChoice = !lastChoice.equals("") ? lastChoice : "F";
+                return lastChoice;
             } else {
-                lastChoice = "I";
-                return "I";
+                lastChoice = !lastChoice.equals("") ? lastChoice : "I";
+                return lastChoice;
             }
         } else return lastChoice;
     }

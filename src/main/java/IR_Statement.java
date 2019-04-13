@@ -1,7 +1,14 @@
-import java.util.Iterator;
 
 public class IR_Statement {
-    String opcode = "", op1 = "", op2 = "", resultOrLabel = "";
+    String opcode = "";
+    String op1 = "";
+    String op2 = "";
+
+    public String getOpcode() {
+        return opcode;
+    }
+
+    String resultOrLabel = "";
 
     //Arithmetic Instructions and Branch Operations
     public IR_Statement(String opcode, String op1, String op2, String resultOrLabel) {
