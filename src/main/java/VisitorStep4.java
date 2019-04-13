@@ -131,7 +131,7 @@ public class VisitorStep4 extends Visitor {
     public Object visitFactorPrefix(MicroParser.FactorPrefixContext ctx) {
         IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());
         String factor = visit(ctx.factor()).toString();
-        String op = visit(ctx.mulop()).toString()+varType(factor); // MUL
+        String op = visit(ctx.mulop()).toString()+varType(factor);
         if (factorPrefix != null) {
             factorPrefix.setOp2(factor);
             String result = "$T" + ++tempCounter;
