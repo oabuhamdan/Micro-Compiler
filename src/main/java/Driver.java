@@ -37,22 +37,9 @@ public class Driver {
         Visitor visitor=new Visitor();
         ParseTree parseTree=parser.program();
         visitor.visit(parseTree);
-        //visitor.getSymbolTable().printAllScopesInfo();
+
         VisitorStep4 irVisitor = new VisitorStep4(visitor.getSymbolTable());
         irVisitor.visit(parseTree);
-        irVisitor.ir.printIR();
-//        String validityMessage = parser.getNumberOfSyntaxErrors() == 0 ? "Accepted" : "Not Accepted";       //If parser have errors then its not valid parse tree
-//        Utils.outputMessageToFile(validityMessage, outputFileName(inputFile));//second param is the input file path , to get output file name with the same name
-    }
-    /**
-     * Shows window to enter output file name, or just press enter to use the default name.
-     *
-     * @param inputFilePath input file path, to use its name with the output file.
-     * @return output file name.
-     */
-    private static String outputFileName(String inputFilePath) {
-        String outputFileName;
-        outputFileName = JOptionPane.showInputDialog("Enter Output File Name", Utils.getFileName(inputFilePath));
-        return outputFileName;
+        irVisitor.getIr().printIRToFile(Utils.getFileName(inputFile));
     }
 }

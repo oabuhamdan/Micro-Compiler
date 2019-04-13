@@ -23,8 +23,9 @@ public class Utils {
         }
 
         File outFile = new File(outputDir + File.separator + fileName + ".out");
-        try (PrintWriter out = new PrintWriter(new BufferedOutputStream(new FileOutputStream(outFile)))) {
-            out.println(message);
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile, true))) {
+            out.write(message);
+            out.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }

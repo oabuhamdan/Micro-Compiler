@@ -1,14 +1,9 @@
 
 public class IR_Statement {
-    String opcode = "";
-    String op1 = "";
-    String op2 = "";
-
-    public String getOpcode() {
-        return opcode;
-    }
-
-    String resultOrLabel = "";
+    private String opcode = "";
+    private String op1 = "";
+    private String op2 = "";
+    private String resultOrLabel = "";
 
     //Arithmetic Instructions and Branch Operations
     public IR_Statement(String opcode, String op1, String op2, String resultOrLabel) {

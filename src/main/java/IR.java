@@ -1,10 +1,8 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+
 
 public class IR {
-    ArrayList<IR_Statement> ir;
+    private ArrayList<IR_Statement> ir;
 
     public IR() {
         ir = new ArrayList<>();
@@ -14,9 +12,9 @@ public class IR {
         ir.add(ir_statement);
     }
 
-    void printIR() {
-        for (IR_Statement s : ir) {
-            System.out.println(s);
+    void printIRToFile(String fileName) {
+        for ( IR_Statement s : ir ) {
+            Utils.outputMessageToFile(s.toString() + '\n', fileName);
         }
     }
 

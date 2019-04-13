@@ -4,8 +4,12 @@ import java.util.List;
 public class VisitorStep4 extends Visitor {
 
     private LinkedHashMap<Object, Object> globalScope;
-    IR ir = new IR();
+    private IR ir = new IR();
     private int tempCounter = 0, labelCounter = 0;
+
+    public IR getIr() {
+        return ir;
+    }
 
     public VisitorStep4(SymbolTable symbolTable) {
         globalScope = symbolTable.getTable().get(0);
