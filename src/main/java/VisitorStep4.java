@@ -248,8 +248,8 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitElsePart(MicroParser.ElsePartContext ctx) {
-        String labelAfterElse = "L" + ++labelCounter;
         String labelAfterIF = "L" + labelCounter;
+        String labelAfterElse = "L" + ++labelCounter;
         ir.addStatement(new IR_Statement("JUMP", labelAfterElse));
         ir.addStatement(new IR_Statement("Label", labelAfterIF));
         visit(ctx.stmt_list());
