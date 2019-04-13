@@ -5,13 +5,13 @@ BEGIN
 	FLOAT x,y,z;
 	FUNCTION VOID main()
 	BEGIN
-	        x:= a*b*c;
+	        x:= x*y*z;
 	        x := 6.2;
 	        a := 5;
-			x := a * x;
+			x := x * a;
 			x := 2.5*2;
-			y := a + x;
+			y := x + a;
     		x := (x+z+x+x/2.0+y/4.0+y/5.0+y/6.0+ a/7.0);
 
-	END	
+	END
 END
