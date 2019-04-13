@@ -18,6 +18,13 @@ BEGIN
           READ(d);
           e := a * c + b * d;
 
+
+			IF (c > 10)
+				a := a + 1;
+
+
+
+
           WRITE(msg3, e, newline);
 
 	END	

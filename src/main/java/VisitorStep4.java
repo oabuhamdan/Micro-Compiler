@@ -245,13 +245,34 @@ public class VisitorStep4 extends Visitor {
 
         ir.addStatement(cond);  // LE p 10 L1
         visit(ctx.stmt_list());
-
-        ir.addStatement(new IR_Statement("Label", labelAfterIF));
-
-        if (visit(ctx.else_part()) != null) {
+        /*if (visit(ctx.else_part()) != null) {
             String labelAfterElse = "L" + ++labelCounter;
             ir.addStatement(new IR_Statement("Label", labelAfterElse));
         }
+        */
+
+        visit(ctx.else_part());
+        return null;
+    }
+    @Override
+    public Object visitElsePart(MicroParser.ElsePartContext ctx) {
+        String labelAfterElse = "L" + ++labelCounter;          //else part
+        ir.addStatement(new IR_Statement("JUMP", labelAfterElse));
+        String labelAfterIF = "L" + --labelCounter;          //else part
+        ir.addStatement(new IR_Statement("Label", labelAfterIF));
+
+        visit(ctx.stmt_list());
+        labelCounter++;
+        ir.addStatement(new IR_Statement("Label", labelAfterElse));
+
+        //label end of if statement
+        return null;
+    }
+
+    @Override
+    public Object visitNoElsePart(MicroParser.NoElsePartContext ctx) {
+        String labelAfterIF = "L" + labelCounter;          //else part
+        ir.addStatement(new IR_Statement("Label", labelAfterIF));
         return null;
     }
 
@@ -294,19 +315,7 @@ public class VisitorStep4 extends Visitor {
         return "LE";
     }
 
-    @Override
-    public Object visitElsePart(MicroParser.ElsePartContext ctx) {
 
-        String labelAfterElse = "L" + ++labelCounter;          //else part
-        ir.addStatement(new IR_Statement("JUMP", labelAfterElse));
-        visit(ctx.stmt_list());
-        //label end of if statement
-        return null;
-    }
-
-    public Object visitNoElsePart(MicroParser.NoElsePartContext ctx) {
-        return null;
-    }
     //end if_stmt
 
     //start for_stmt
