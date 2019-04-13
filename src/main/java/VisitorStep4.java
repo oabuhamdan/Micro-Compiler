@@ -1,12 +1,10 @@
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class VisitorStep4 extends Visitor {
 
     LinkedHashMap<Object, Object> globalScope;
     IR ir = new IR();
     int tempCounter = 0, labelCounter = 0;
-    boolean addop = false, subop = false;
 
     public VisitorStep4(SymbolTable symbolTable) {
         globalScope = symbolTable.getTable().get(0);
@@ -257,13 +255,11 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitPlus(MicroParser.PlusContext ctx) {
-        addop = true;
         return "ADD";
     }
 
     @Override
     public Object visitMinus(MicroParser.MinusContext ctx) {
-        subop = true;
         return "SUB";
     }
 
