@@ -15,7 +15,6 @@ public class IR_Statement {
     public IR_Statement(String opcode, String resultOrLabel) {
         this.opcode = opcode;
         this.resultOrLabel = resultOrLabel;
-
     }
 
     //Move Operations

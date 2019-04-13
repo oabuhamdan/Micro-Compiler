@@ -88,9 +88,35 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitExpr(MicroParser.ExprContext ctx) {
-        String prefix;
+
+        IR_Statement exprPrefix = (IR_Statement) visit(ctx.expr_prefix());      //add and sub
+        String term = visitTerm(ctx.term()).toString();               //mul and div
+        if (exprPrefix != null) {
+            exprPrefix.setOp2(term);//  MUL 5 6
+            String result = "$T" + ++tempCounter;
+            exprPrefix.setResultOrLabel(result);
+            ir.addStatement(exprPrefix);
+            return result;
+        }
+        return term;
+
+        /*
+
+        IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());      //mul 5
+        String factor = visit(ctx.factor()).toString();               //mul and div
+
+        if (factorPrefix != null) {
+            factorPrefix.setOp2(factor);//  MUL 5 6
+            String result = "$T" + ++tempCounter;
+            factorPrefix.setResultOrLabel(result);
+            ir.addStatement(factorPrefix);
+            return result;
+        }
+        return factor;
+
+        * */
+        /*
         String factor;
-        visit(ctx.expr_prefix());
         factor = visitTerm(ctx.term()).toString();
         if (addop) {
             ir.addStatement(new IR_Statement("ADD", factor, "T", "$T" + ++tempCounter));
@@ -104,19 +130,59 @@ public class VisitorStep4 extends Visitor {
         if (factor.startsWith("$"))
             return factor + ++tempCounter;
         else
-            return factor;
+            return factor;*/
     }
 
     @Override
     public Object visitExprPrefix(MicroParser.ExprPrefixContext ctx) {
+
+        IR_Statement exprPrefix = (IR_Statement) visit(ctx.expr_prefix());      //add and sub
+        String term = visitTerm(ctx.term()).toString();       //returns either $T or number or                //mul and div  ready
+        String op = visit(ctx.addop()).toString() + factorType(term); // MUL
+        if (exprPrefix != null) {
+            exprPrefix.setOp2(term);
+            String result = "$T" + ++tempCounter;
+            exprPrefix.setResultOrLabel(result);
+            ir.addStatement(exprPrefix);
+            return new IR_Statement(op, result, "", "");
+        } else
+            return new IR_Statement(op, term, "", "");
+
+/*
+        IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());      //MUL 5
+        String factor = visit(ctx.factor()).toString();     //6
+        String op = visit(ctx.mulop()).toString() + factorType(factor); // MUL
+        if (factorPrefix != null) {
+            factorPrefix.setOp2(factor);//  MUL 5 6
+            String result="$T" + ++tempCounter;
+            factorPrefix.setResultOrLabel(result);
+            ir.addStatement(factorPrefix);
+            return new IR_Statement(op,result,"","");
+        }
+        else return new IR_Statement(op,factor,"","");
+  */
+        /*
         visit(ctx.expr_prefix());//epsilon
         String prefix = visitTerm(ctx.term()).toString();
         visit(ctx.addop());//+
-        return prefix;
+        return prefix;*/
     }
 
     @Override
     public Object visitTerm(MicroParser.TermContext ctx) {
+        IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());      //mul 5
+        String factor = visit(ctx.factor()).toString();               //mul and div
+
+        if (factorPrefix != null) {
+            factorPrefix.setOp2(factor);//  MUL 5 6
+            String result = "$T" + ++tempCounter;
+            factorPrefix.setResultOrLabel(result);
+            ir.addStatement(factorPrefix);
+            return result;
+        }
+        return factor;
+
+        /*
         IR_Statement term;
         String result;
         if ((term = (IR_Statement) visit(ctx.factor_prefix())) != null) {
@@ -127,12 +193,25 @@ public class VisitorStep4 extends Visitor {
             return "$T";
         } else {
             return visit(ctx.factor());
-        }
+        }*/
     }
 
     @Override
     public Object visitFactorPrefix(MicroParser.FactorPrefixContext ctx) {
-        IR_Statement factorPrefix = null;
+
+        IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());      //MUL 5
+        String factor = visit(ctx.factor()).toString();     //6
+        String op = visit(ctx.mulop()).toString() + factorType(factor); // MUL
+        if (factorPrefix != null) {
+            factorPrefix.setOp2(factor);//  MUL 5 6
+            String result = "$T" + ++tempCounter;
+            factorPrefix.setResultOrLabel(result);
+            ir.addStatement(factorPrefix);
+            return new IR_Statement(op, result, "", "");
+        } else return new IR_Statement(op, factor, "", "");
+
+
+        /*IR_Statement factorPrefix = null;
         String factor;
         String opcode;
         String result;
@@ -148,7 +227,7 @@ public class VisitorStep4 extends Visitor {
             opcode = visit(ctx.mulop()).toString();//*
         }
         return new IR_Statement(opcode, result, "", "");
-
+*/
     }
 
     @Override
@@ -173,25 +252,23 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitFloatLit(MicroParser.FloatLitContext ctx) {
-
         return ctx.FLOATLITERAL().getText();
     }
 
     @Override
     public Object visitPlus(MicroParser.PlusContext ctx) {
         addop = true;
-        return null;
+        return "ADD";
     }
 
     @Override
     public Object visitMinus(MicroParser.MinusContext ctx) {
         subop = true;
-        return null;
+        return "SUB";
     }
 
     @Override
     public Object visitMul(MicroParser.MulContext ctx) {
-
         return "MULT";
     }
 
@@ -298,5 +375,27 @@ public class VisitorStep4 extends Visitor {
     }
     //end for_stmt
 
+    private String lastChoice = "";
+
+    private String factorType(String factor) {
+        Object type = globalScope.get(factor);
+        if (type != null) {
+            if (type.toString().equals("INT")) {
+                lastChoice = "I";
+                return "I";
+            } else {
+                lastChoice = "F";
+                return "F";
+            }
+        } else if (!factor.startsWith("$")) {
+            if (factor.contains(".")) {
+                lastChoice = "F";
+                return "F";
+            } else {
+                lastChoice = "I";
+                return "I";
+            }
+        } else return lastChoice;
+    }
 
 }
