@@ -244,7 +244,7 @@ public class VisitorStep4 extends Visitor {
 
         if (visit(ctx.else_part()) != null) ;
         String labelAfter = "L" + ++labelCounter;
-        ir.addStatement(new IR_Statement("Label", labelBefore));
+        ir.addStatement(new IR_Statement("Label", labelAfter));
         return null;
     }
 
