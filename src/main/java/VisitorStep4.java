@@ -237,11 +237,14 @@ public class VisitorStep4 extends Visitor {
     //start if_stmt
     @Override
     public Object visitIf_stmt(MicroParser.If_stmtContext ctx) {
-        String label = "L" + ++labelCounter;
+        String labelBefore = "L" + ++labelCounter;
         visitCond(ctx.cond());
         visit(ctx.stmt_list());
-        ir.addStatement(new IR_Statement("Label", label));
-        visit(ctx.else_part());
+        ir.addStatement(new IR_Statement("Label", labelBefore));
+
+        if (visit(ctx.else_part()) != null) ;
+        String labelAfter = "L" + ++labelCounter;
+        ir.addStatement(new IR_Statement("Label", labelBefore));
         return null;
     }
 
