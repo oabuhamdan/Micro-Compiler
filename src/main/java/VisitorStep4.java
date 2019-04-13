@@ -88,6 +88,8 @@ public class VisitorStep4 extends Visitor {
         String term = visitTerm(ctx.term()).toString();
         if (exprPrefix != null) {
             exprPrefix.setOp2(term);
+            String type=matchTypes(term,exprPrefix.op1);
+            exprPrefix.setOpcode(exprPrefix.getOpcode()+type);
             String result = "$T" + ++tempCounter;
             exprPrefix.setResultOrLabel(result);
             ir.addStatement(exprPrefix);
