@@ -55,14 +55,6 @@ L1
 stmt2
 L2
 
-//wrong
-le a b L1
-stmt1
-L1
-jump L2
-stmt2
-L2
-
 if(a>b)stmt
 le a b L1
 stmt

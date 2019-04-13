@@ -200,7 +200,7 @@ public class VisitorStep4 extends Visitor {
     @Override
     public Object visitRead_stmt(MicroParser.Read_stmtContext ctx) {
         List id_list = (List) visitId_list(ctx.id_list());
-        for ( Object id : id_list ) {
+        for (Object id : id_list) {
             ir.addStatement(new IR_Statement("READ" + factorType((String) id), (String) id));
         }
         return null;
@@ -215,7 +215,7 @@ public class VisitorStep4 extends Visitor {
     @Override
     public Object visitWrite_stmt(MicroParser.Write_stmtContext ctx) {
         List id_list = (List) visitId_list(ctx.id_list());
-        for ( Object id : id_list ) {
+        for (Object id : id_list) {
             ir.addStatement(new IR_Statement("WRITE" + factorType((String) id), (String) id));
         }
         return null;
@@ -237,41 +237,30 @@ public class VisitorStep4 extends Visitor {
     //start if_stmt
     @Override
     public Object visitIf_stmt(MicroParser.If_stmtContext ctx) {
-        String labelAfterIF = "L" + ++labelCounter;             //No else part
-
-        IR_Statement cond = (IR_Statement) visitCond(ctx.cond());       //LE p 10
-
+        String labelAfterIF = "L" + ++labelCounter;
+        IR_Statement cond = (IR_Statement) visitCond(ctx.cond());
         cond.setResultOrLabel(labelAfterIF);
-
-        ir.addStatement(cond);  // LE p 10 L1
+        ir.addStatement(cond);
         visit(ctx.stmt_list());
-        /*if (visit(ctx.else_part()) != null) {
-            String labelAfterElse = "L" + ++labelCounter;
-            ir.addStatement(new IR_Statement("Label", labelAfterElse));
-        }
-        */
-
         visit(ctx.else_part());
         return null;
     }
+
     @Override
     public Object visitElsePart(MicroParser.ElsePartContext ctx) {
-        String labelAfterElse = "L" + ++labelCounter;          //else part
+        String labelAfterElse = "L" + ++labelCounter;
+        String labelAfterIF = "L" + labelCounter;
         ir.addStatement(new IR_Statement("JUMP", labelAfterElse));
-        String labelAfterIF = "L" + --labelCounter;          //else part
         ir.addStatement(new IR_Statement("Label", labelAfterIF));
-
         visit(ctx.stmt_list());
-        labelCounter++;
         ir.addStatement(new IR_Statement("Label", labelAfterElse));
-
         //label end of if statement
         return null;
     }
 
     @Override
     public Object visitNoElsePart(MicroParser.NoElsePartContext ctx) {
-        String labelAfterIF = "L" + labelCounter;          //else part
+        String labelAfterIF = "L" + labelCounter;
         ir.addStatement(new IR_Statement("Label", labelAfterIF));
         return null;
     }
