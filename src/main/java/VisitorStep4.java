@@ -1,4 +1,5 @@
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class VisitorStep4 extends Visitor {
 
@@ -61,6 +62,7 @@ public class VisitorStep4 extends Visitor {
         return null;
     }
 
+
     @Override
     public Object visitAssignStatment(MicroParser.AssignStatmentContext ctx) {
         visitAssign_stmt(ctx.assign_stmt());
@@ -90,7 +92,7 @@ public class VisitorStep4 extends Visitor {
         IR_Statement exprPrefix = (IR_Statement) visit(ctx.expr_prefix());      //add and sub
         String term = visitTerm(ctx.term()).toString();               //mul and div
         if (exprPrefix != null) {
-            exprPrefix.setOp2(term);//  MUL 5 6
+            exprPrefix.setOp2(term);
             String result = "$T" + ++tempCounter;
             exprPrefix.setResultOrLabel(result);
             ir.addStatement(exprPrefix);
@@ -134,9 +136,9 @@ public class VisitorStep4 extends Visitor {
     @Override
     public Object visitExprPrefix(MicroParser.ExprPrefixContext ctx) {
 
-        IR_Statement exprPrefix = (IR_Statement) visit(ctx.expr_prefix());      //add and sub
-        String term = visitTerm(ctx.term()).toString();       //returns either $T or number or                //mul and div  ready
-        String op = visit(ctx.addop()).toString() + factorType(term); // MUL
+        IR_Statement exprPrefix = (IR_Statement) visit(ctx.expr_prefix());
+        String term = visitTerm(ctx.term()).toString();
+        String op = visit(ctx.addop()).toString() + factorType(term);
         if (exprPrefix != null) {
             exprPrefix.setOp2(term);
             String result = "$T" + ++tempCounter;
@@ -168,11 +170,11 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitTerm(MicroParser.TermContext ctx) {
-        IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());      //mul 5
-        String factor = visit(ctx.factor()).toString();               //mul and div
+        IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());
+        String factor = visit(ctx.factor()).toString();
 
         if (factorPrefix != null) {
-            factorPrefix.setOp2(factor);//  MUL 5 6
+            factorPrefix.setOp2(factor);
             String result = "$T" + ++tempCounter;
             factorPrefix.setResultOrLabel(result);
             ir.addStatement(factorPrefix);
@@ -196,12 +198,11 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitFactorPrefix(MicroParser.FactorPrefixContext ctx) {
-
-        IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());      //MUL 5
-        String factor = visit(ctx.factor()).toString();     //6
+        IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());
+        String factor = visit(ctx.factor()).toString();
         String op = visit(ctx.mulop()).toString() + factorType(factor); // MUL
         if (factorPrefix != null) {
-            factorPrefix.setOp2(factor);//  MUL 5 6
+            factorPrefix.setOp2(factor);
             String result = "$T" + ++tempCounter;
             factorPrefix.setResultOrLabel(result);
             ir.addStatement(factorPrefix);
@@ -275,16 +276,31 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitReadStatment(MicroParser.ReadStatmentContext ctx) {
+        visitRead_stmt(ctx.read_stmt());
+        return null;
+    }
+
+    @Override
+    public Object visitRead_stmt(MicroParser.Read_stmtContext ctx) {
+        List id_list = (List) visitId_list(ctx.id_list());
+        for ( Object id : id_list ) {
+            ir.addStatement(new IR_Statement("READ" + factorType((String) id), (String) id));
+        }
         return null;
     }
 
     @Override
     public Object visitWriteStatment(MicroParser.WriteStatmentContext ctx) {
+        visitWrite_stmt(ctx.write_stmt());
         return null;
     }
 
     @Override
-    public Object visitReturnStatment(MicroParser.ReturnStatmentContext ctx) {
+    public Object visitWrite_stmt(MicroParser.Write_stmtContext ctx) {
+        List id_list = (List) visitId_list(ctx.id_list());
+        for ( Object id : id_list ) {
+            ir.addStatement(new IR_Statement("WRITE" + factorType((String) id), (String) id));
+        }
         return null;
     }
 //end of basic stmt
@@ -304,10 +320,10 @@ public class VisitorStep4 extends Visitor {
     //start if_stmt
     @Override
     public Object visitIf_stmt(MicroParser.If_stmtContext ctx) {
-        //add label
+        String label = "L" + ++labelCounter;
         visitCond(ctx.cond());
         visit(ctx.stmt_list());
-        //add label to skip else if true
+        ir.addStatement(new IR_Statement("Label", label));
         visit(ctx.else_part());
         return null;
     }
@@ -322,32 +338,33 @@ public class VisitorStep4 extends Visitor {
 
     @Override
     public Object visitEquals(MicroParser.EqualsContext ctx) {
-        return null;
+
+        return "NE";
     }
 
     @Override
     public Object visitNotEquals(MicroParser.NotEqualsContext ctx) {
-        return null;
+        return "EQ";
     }
 
     @Override
     public Object visitLE(MicroParser.LEContext ctx) {
-        return null;
+        return "GT";
     }
 
     @Override
     public Object visitGE(MicroParser.GEContext ctx) {
-        return null;
+        return "LT";
     }
 
     @Override
     public Object visitLT(MicroParser.LTContext ctx) {
-        return super.visitLT(ctx);
+        return "GE";
     }
 
     @Override
     public Object visitGT(MicroParser.GTContext ctx) {
-        return null;
+        return "LE";
     }
 
     @Override
@@ -371,6 +388,7 @@ public class VisitorStep4 extends Visitor {
     }
     //end for_stmt
 
+
     private String lastChoice = "";
 
     private String factorType(String factor) {
@@ -379,9 +397,11 @@ public class VisitorStep4 extends Visitor {
             if (type.toString().equals("INT")) {
                 lastChoice = "I";
                 return "I";
-            } else {
+            } else if (type.toString().equals("FLOAT")) {
                 lastChoice = "F";
                 return "F";
+            } else {
+                return "S";
             }
         } else if (!factor.startsWith("$")) {
             if (factor.contains(".")) {
