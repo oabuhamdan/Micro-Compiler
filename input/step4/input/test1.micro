@@ -2,13 +2,16 @@ PROGRAM test1
 BEGIN
 
 	INT a,b,c,d,e;
-
+	FLOAT x,y,z;
 	FUNCTION VOID main()
 	BEGIN
-
-			IF (c > 10)
-				a := a + 1;
-			ENDIF
+	        x:= a*b*c;
+	        x := 6.2;
+	        a := 5;
+			x := a * x;
+			x := 2.5*2;
+			y := a + x;
+    		x := (x+z+x+x/2.0+y/4.0+y/5.0+y/6.0+ a/7.0);
 
 	END	
 END

@@ -100,7 +100,7 @@ public class VisitorStep4 extends Visitor {
     public Object visitExprPrefix(MicroParser.ExprPrefixContext ctx) {
         IR_Statement exprPrefix = (IR_Statement) visit(ctx.expr_prefix());
         String term = visitTerm(ctx.term()).toString();
-        String op = visit(ctx.addop()).toString() + varType(term);
+        String op = visit(ctx.addop()).toString();
         if (exprPrefix != null) {
             exprPrefix.setOp2(term);
             String result = "$T" + ++tempCounter;
@@ -118,6 +118,8 @@ public class VisitorStep4 extends Visitor {
 
         if (factorPrefix != null) {
             factorPrefix.setOp2(factor);
+            String type=matchTypes(factor,factorPrefix.op1);
+            factorPrefix.setOpcode(factorPrefix.getOpcode()+type);
             String result = "$T" + ++tempCounter;
             factorPrefix.setResultOrLabel(result);
             ir.addStatement(factorPrefix);
@@ -131,7 +133,7 @@ public class VisitorStep4 extends Visitor {
     public Object visitFactorPrefix(MicroParser.FactorPrefixContext ctx) {
         IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());
         String factor = visit(ctx.factor()).toString();
-        String op = visit(ctx.mulop()).toString() + varType(factor); // MUL
+        String op = visit(ctx.mulop()).toString(); // MUL
         if (factorPrefix != null) {
             factorPrefix.setOp2(factor);
             String result = "$T" + ++tempCounter;
@@ -355,6 +357,17 @@ public class VisitorStep4 extends Visitor {
                 return lastChoice;
             }
         } else return lastChoice;
+    }
+
+    private String matchTypes(String op1,String op2){
+        String type1=varType(op1);
+        String type2=varType(op2);
+        if (type1.equals(type2)){
+            return type1;
+        }
+        else
+            return "F";
+
     }
 
 }

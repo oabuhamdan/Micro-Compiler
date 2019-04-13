@@ -1,13 +1,14 @@
 PROGRAM test8
 BEGIN
 
-	FLOAT a,b,k,g,p,u;
+	FLOAT k,g,p,u;
+	INT a,b;
 	STRING newline := "\n";
 	
 	FUNCTION INT main()
 	BEGIN
 
-		a := 10.2;
+		a := 10;
 		b := 11.4;
         FOR ( ; a <= 80 ; )
 			IF (b = 1)

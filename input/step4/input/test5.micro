@@ -13,9 +13,11 @@ BEGIN
 		READ(a);
 	
 		d := 1;
+
 		FOR ( ; a > 1; a := a - 1 )
 		   d := d * a;
-	    ENDFOR	    
+	    ENDFOR
+
 		WRITE(msg2, d, newline);
 
 	END
