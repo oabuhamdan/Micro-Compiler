@@ -99,43 +99,10 @@ public class VisitorStep4 extends Visitor {
             return result;
         }
         return term;
-
-        /*
-
-        IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());      //mul 5
-        String factor = visit(ctx.factor()).toString();               //mul and div
-
-        if (factorPrefix != null) {
-            factorPrefix.setOp2(factor);//  MUL 5 6
-            String result = "$T" + ++tempCounter;
-            factorPrefix.setResultOrLabel(result);
-            ir.addStatement(factorPrefix);
-            return result;
-        }
-        return factor;
-
-        * */
-        /*
-        String factor;
-        factor = visitTerm(ctx.term()).toString();
-        if (addop) {
-            ir.addStatement(new IR_Statement("ADD", factor, "T", "$T" + ++tempCounter));
-            addop = false;
-        } else if (subop) {
-            ir.addStatement(new IR_Statement("SUB", factor, "$T", "$T" + ++tempCounter));
-            subop = false;
-        }
-
-//        factor = visitTerm(ctx.term()).toString();
-        if (factor.startsWith("$"))
-            return factor + ++tempCounter;
-        else
-            return factor;*/
     }
 
     @Override
     public Object visitExprPrefix(MicroParser.ExprPrefixContext ctx) {
-
         IR_Statement exprPrefix = (IR_Statement) visit(ctx.expr_prefix());
         String term = visitTerm(ctx.term()).toString();
         String op = visit(ctx.addop()).toString() + factorType(term);
@@ -147,25 +114,6 @@ public class VisitorStep4 extends Visitor {
             return new IR_Statement(op, result, "", "");
         } else
             return new IR_Statement(op, term, "", "");
-
-/*
-        IR_Statement factorPrefix = (IR_Statement) visit(ctx.factor_prefix());      //MUL 5
-        String factor = visit(ctx.factor()).toString();     //6
-        String op = visit(ctx.mulop()).toString() + factorType(factor); // MUL
-        if (factorPrefix != null) {
-            factorPrefix.setOp2(factor);//  MUL 5 6
-            String result="$T" + ++tempCounter;
-            factorPrefix.setResultOrLabel(result);
-            ir.addStatement(factorPrefix);
-            return new IR_Statement(op,result,"","");
-        }
-        else return new IR_Statement(op,factor,"","");
-  */
-        /*
-        visit(ctx.expr_prefix());//epsilon
-        String prefix = visitTerm(ctx.term()).toString();
-        visit(ctx.addop());//+
-        return prefix;*/
     }
 
     @Override
@@ -182,18 +130,6 @@ public class VisitorStep4 extends Visitor {
         }
         return factor;
 
-        /*
-        IR_Statement term;
-        String result;
-        if ((term = (IR_Statement) visit(ctx.factor_prefix())) != null) {
-            term.setOp2(visit(ctx.factor()).toString());
-            result = "$T" + ++tempCounter;
-            term.setResultOrLabel(result);
-            ir.addStatement(term);
-            return "$T";
-        } else {
-            return visit(ctx.factor());
-        }*/
     }
 
     @Override
@@ -208,25 +144,6 @@ public class VisitorStep4 extends Visitor {
             ir.addStatement(factorPrefix);
             return new IR_Statement(op, result, "", "");
         } else return new IR_Statement(op, factor, "", "");
-
-
-        /*IR_Statement factorPrefix = null;
-        String factor;
-        String opcode;
-        String result;
-        if ((factorPrefix = (IR_Statement) (visit(ctx.factor_prefix()))) != null) {
-            factor = visit(ctx.factor()).toString();//a
-            factorPrefix.setOp2(factor);
-            result = "$T" + ++tempCounter;
-            opcode = visit(ctx.mulop()).toString();//*
-            factorPrefix.setResultOrLabel(result);
-            ir.addStatement(factorPrefix);
-        } else {
-            result = visit(ctx.factor()).toString();//a
-            opcode = visit(ctx.mulop()).toString();//*
-        }
-        return new IR_Statement(opcode, result, "", "");
-*/
     }
 
     @Override
@@ -331,7 +248,7 @@ public class VisitorStep4 extends Visitor {
     @Override
     public Object visitCond(MicroParser.CondContext ctx) {
         visitExpr(ctx.expr(0));
-        visit(ctx.compare());
+        String op = visit(ctx.compare()).toString();
         visitExpr(ctx.expr(1));
         return null;
     }
