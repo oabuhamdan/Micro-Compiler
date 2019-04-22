@@ -41,5 +41,6 @@ public class Driver {
         VisitorStep4 irVisitor = new VisitorStep4(visitor.getSymbolTable());
         irVisitor.visit(parseTree);
         irVisitor.getIr().printIRToFile(Utils.getFileName(inputFile));
+        Visitor.getSymbolTable().printAllScopesInfo();
     }
 }

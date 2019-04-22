@@ -1,22 +1,21 @@
 import java.util.ArrayList;
 
+public class Tiny {
 
-public class IR {
-    private ArrayList<IRStatement> ir;
+    private ArrayList<IRStatement> tiny;
 
-    public IR() {
-        ir = new ArrayList<>();
+    public Tiny() {
+        tiny = new ArrayList<>();
     }
 
     void addStatement(IRStatement ir_statement) {
-        ir.add(ir_statement);
+        tiny.add(ir_statement);
     }
 
     void printIRToFile(String fileName) {
-        for (IRStatement s : ir) {
+        for (IRStatement s : tiny) {
             Utils.outputMessageToFile(s.toString() + '\n', fileName);
         }
     }
-
 
 }

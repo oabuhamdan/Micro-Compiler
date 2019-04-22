@@ -2,10 +2,10 @@ import java.util.*;
 
 public class Visitor extends MicroBaseVisitor {
 
-    private SymbolTable symbolTable = new SymbolTable();
+    private static SymbolTable symbolTable = new SymbolTable();
     private int count = 0;
 
-    public SymbolTable getSymbolTable() {
+    public static SymbolTable getSymbolTable() {
 
         return symbolTable;
     }
@@ -55,7 +55,7 @@ public class Visitor extends MicroBaseVisitor {
     public Object visitString_decl(MicroParser.String_declContext ctx) {
         Map vars = new LinkedHashMap();
         Object id = visitId(ctx.id());
-        vars.put(id, "STRING" + " : " + ctx.str().getText());
+        vars.put(id + " " + ctx.str().getText(), "STRING");
         return vars;
     }
 
