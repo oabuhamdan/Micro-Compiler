@@ -2,18 +2,18 @@ import java.util.ArrayList;
 
 public class Tiny {
 
-    private ArrayList<IRStatement> tiny;
+    private ArrayList<TinyStatement> tiny;
 
     public Tiny() {
         tiny = new ArrayList<>();
     }
 
-    void addStatement(IRStatement ir_statement) {
+    void addStatement(TinyStatement ir_statement) {
         tiny.add(ir_statement);
     }
 
-    void printIRToFile(String fileName) {
-        for (IRStatement s : tiny) {
+    void printTinyToFile(String fileName) {
+        for (TinyStatement s : tiny) {
             Utils.outputMessageToFile(s.toString() + '\n', fileName);
         }
     }

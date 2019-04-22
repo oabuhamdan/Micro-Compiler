@@ -55,7 +55,7 @@ public class Visitor extends MicroBaseVisitor {
     public Object visitString_decl(MicroParser.String_declContext ctx) {
         Map vars = new LinkedHashMap();
         Object id = visitId(ctx.id());
-        vars.put(id + " " + ctx.str().getText(), "STRING");
+        vars.put(id, "STRING" + " : " + ctx.str().getText());
         return vars;
     }
 

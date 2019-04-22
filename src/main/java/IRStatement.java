@@ -26,20 +26,28 @@ public class IRStatement {
         this.resultOrLabel = resultOrLabel;
     }
 
-    public void setOpcode(String opcode) {
-        this.opcode = opcode;
-    }
-
-    public void setOp1(String op1) {
-        this.op1 = op1;
-    }
-
     public void setOp2(String op2) {
         this.op2 = op2;
     }
 
     public void setResultOrLabel(String resultOrLabel) {
         this.resultOrLabel = resultOrLabel;
+    }
+
+    public String getOpcode() {
+        return opcode;
+    }
+
+    public String getOp1() {
+        return op1;
+    }
+
+    public String getOp2() {
+        return op2;
+    }
+
+    public String getResultOrLabel() {
+        return resultOrLabel;
     }
 
     @Override

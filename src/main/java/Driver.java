@@ -3,7 +3,6 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.*;
-import javax.swing.JOptionPane;
 
 
 /**
@@ -11,8 +10,6 @@ import javax.swing.JOptionPane;
  *
  * @author Osama AbuHamdan
  * @author Saad Al-Jalowdi
- *
- *
  */
 public class Driver {
 
@@ -34,13 +31,14 @@ public class Driver {
         MicroLexer lexer = new MicroLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         MicroParser parser = new MicroParser(tokens);
-        Visitor visitor=new Visitor();
-        ParseTree parseTree=parser.program();
+        Visitor visitor = new Visitor();
+        ParseTree parseTree = parser.program();
         visitor.visit(parseTree);
 
         VisitorStep4 irVisitor = new VisitorStep4(visitor.getSymbolTable());
         irVisitor.visit(parseTree);
-        irVisitor.getIr().printIRToFile(Utils.getFileName(inputFile));
-        Visitor.getSymbolTable().printAllScopesInfo();
+        CodeGenerator codeGenerator = new CodeGenerator(visitor.getSymbolTable(), irVisitor.getIr());
+        codeGenerator.generateTiny();
+        codeGenerator.getTiny().printTinyToFile(Utils.getFileName(inputFile));
     }
 }

@@ -18,5 +18,7 @@ public class IR {
         }
     }
 
-
+    public ArrayList<IRStatement> getIr() {
+        return ir;
+    }
 }
